@@ -1,0 +1,15 @@
+node_modules/
+nexarm/data/
+*.local.json
+.env
+.env.*
+*.log
+
+# copias de terceros: se bajan de su origen
+craft-anything/
+craft-bin/
+xencrm/
+
+# capturas del sitio de SendPulse: queda solo el analisis
+benchmark-sendpulse/capture-*/
+benchmark-sendpulse/*.cany

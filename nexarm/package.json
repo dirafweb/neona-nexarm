@@ -1,0 +1,31 @@
+{
+  "name": "nexarm",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "seed": "tsx src/seed.ts",
+    "start": "tsx src/server.ts",
+    "libro": "tsx src/audit-cli.ts",
+    "detener": "node -e \"require('fs').writeFileSync('data/.detener','')\"",
+    "agente": "tsx src/sales/run.ts",
+    "test": "tsx test/fase1.test.ts && tsx test/fase2.test.ts && tsx test/fase3.test.ts && tsx test/fase4.test.ts && tsx test/fase5.test.ts && tsx test/fase6.test.ts && tsx test/fase7.test.ts && tsx test/fase8.test.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^1.7.0",
+    "@electric-sql/pglite": "^0.5.16",
+    "@modelcontextprotocol/sdk": "^1.32.2",
+    "express": "^5.3.0",
+    "nodemailer": "^10.5.0",
+    "openai": "^7.55.0",
+    "zod": "^4.6.7"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.6",
+    "@types/node": "^26.6.6",
+    "@types/nodemailer": "^8.0.2",
+    "tsx": "^4.23.15",
+    "typescript": "^7.0.2"
+  }
+}
