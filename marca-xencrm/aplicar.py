@@ -7,6 +7,7 @@ Hace tres cosas en public/ y se puede repetir despues de cada actualizacion del 
      en los tokens --fx-* de la piel. Mide el contraste de cada texto contra su fondo (minimo 4.5) antes de escribir.
   2. Consola y portada (consola.html, inicio.html): los colores de la piel de fabrica pasan a los de Neona Tech.
   3. Nombre del producto en lo que se ve: XENCRM pasa a Nexarm. Los identificadores del codigo (window.XENCRM_*) no cambian.
+  4. Pruebas (src/eval): las cuatro comprobaciones que nombran la marca de fabrica esperan la de Nexarm.
 
 El nombre del negocio, su logo y su color van aparte, en xencrm.config.json (business.name y brand).
 Si una actualizacion trae un admin.html con cambios locales, restauralo antes de actualizar:
@@ -72,6 +73,7 @@ PORTADA = [  # Las olas, mas sobrias que el reemplazo general, para que el titul
     ("--ola-1:#0a2a5e; --ola-2:#0b6aa2; --ola-3:#007fb0; --ola-4:#5cc8ee; --ola-brillo:#eaf7ff;",
      "--ola-1:#0a2a5e; --ola-2:#0b4f8a; --ola-3:#0b6aa2; --ola-4:#00a3e0; --ola-brillo:#bfe6f7;"),
     ("rgba(7,30,34,.55)", "rgba(7,27,63,.55)"),
+    ('<meta name="theme-color" content="#071b3f">', '<meta name="theme-color" content="#0a2a5e">'),  # la barra del navegador, en el azul de la marca
 ]
 FUENTES = "family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600;700&family=Sora:wght@500;600;700"
 
@@ -104,10 +106,15 @@ def fonts(text):
     return re.sub(r"(?<![\"\w])Figtree\b", '"IBM Plex Sans"', text)
 
 
+COMENTARIO = r"(/\*[\s\S]*?\*/|<!--[\s\S]*?-->)"
+
+
 def name(text):
     """El nombre del producto en lo que se ve. Deja quietos los identificadores (window.XENCRM_QUIEN)."""
     text = re.sub(r"(<span[^>]*>)XEN(</span>)CRM", r"\1NEX\2ARM", text)
-    return re.sub(r"XENCRM(?![_A-Za-z0-9])", "Nexarm", text)
+    # Los comentarios no se ven y las pruebas de XENCRM ubican sus bloques por ellos: quedan como vienen.
+    parts = re.split(COMENTARIO, text)
+    return "".join(p if i % 2 else re.sub(r"XENCRM(?![_A-Za-z0-9])", "Nexarm", p) for i, p in enumerate(parts))
 
 
 for label, values in (("claro", CLARO), ("oscuro", OSCURO)):
@@ -151,5 +158,23 @@ for path in sorted(root.glob("*")):
         write(path.name, renamed)
         print(f"{path.name}: nombre")
 
-left = sum(len(re.findall(r"XENCRM(?![_A-Za-z0-9])", p.read_text(encoding="utf-8"))) for p in root.glob("*") if p.suffix in (".html", ".js"))
+left = sum(len(re.findall(r"XENCRM(?![_A-Za-z0-9])", re.sub(COMENTARIO, "", p.read_text(encoding="utf-8")))) for p in root.glob("*") if p.suffix in (".html", ".js"))
 print(f"menciones visibles de XENCRM que quedan en public/: {left}")
+
+# 4. Las comprobaciones que nombran la marca de fabrica esperan la de Nexarm
+PRUEBAS = {
+    "facil.ts": [(r'/family=Bricolage\+Grotesque:[^"]*&family=Figtree:/', r'/family=IBM\+Plex\+Mono:[^"]*&family=IBM\+Plex\+Sans:[^"]*&family=Sora:/')],
+    "optimizacion.ts": [("/Esto lo hace quien administra XENCRM/", "/Esto lo hace quien administra Nexarm/")],
+    "agenda.ts": [("'XENCRM no le avisa: díselo tú en el chat.'", "'Nexarm no le avisa: díselo tú en el chat.'")],
+    "prospectos.ts": [(r"/<span>XEN<\/span>CRM/", r"/<span>NEX<\/span>ARM/")],
+}
+evals = root.parent / "src" / "eval"
+for file, pairs in PRUEBAS.items():
+    path = evals / file
+    text = path.read_text(encoding="utf-8")
+    for old, new in pairs:
+        if old in text: text = text.replace(old, new)
+        elif new not in text: sys.exit(f"{file}: no esta la comprobacion de marca esperada: XENCRM la cambio, revisa este script")
+    with open(path, "w", encoding="utf-8", newline="") as f:
+        f.write(text)
+print(f"src/eval: {len(PRUEBAS)} comprobaciones de marca")
