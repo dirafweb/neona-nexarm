@@ -13,9 +13,11 @@ const ANTHROPIC_MODEL = "claude-opus-5-5";
 const OPENAI_MODEL = "gpt-5.5";
 const MAX_ITERATIONS = 40;
 /** Una cuenta con pocas llamadas por minuto responde 429: el SDK espera lo que la API indica y reintenta. */
-const OPENAI_RETRIES = 4;
 const RATE_LIMIT_WAITS = 8;
-const RATE_LIMIT_WAIT_MS = 25_000;
+// Cuenta con cupo de 3 llamadas por minuto: tras el primer limite, una llamada cada 21 s.
+const RATE_LIMIT_GAP_MS = 21_000;
+let gapMs = 0;
+let nextCallAt = 0;
 
 /** NEXARM_PROVEEDOR manda. Sin el, se usa el proveedor cuya clave este en el entorno. */
 export function pickProvider(env: NodeJS.ProcessEnv = process.env): Provider {
@@ -65,11 +67,15 @@ async function withClaude({ agent, task, mcp, tools }: Turn, anthropic: Anthropi
 /** Con el cupo por minuto agotado, espera a que se libere y repite la llamada. */
 async function paced<T>(call: () => Promise<T>): Promise<T> {
   for (let attempt = 0; ; attempt++) {
+    const wait = nextCallAt - Date.now();
+    if (wait > 0) await new Promise((r) => setTimeout(r, wait));
+    nextCallAt = Date.now() + gapMs;
     try {
       return await call();
     } catch (err) {
       if (!(err instanceof OpenAI.RateLimitError) || attempt >= RATE_LIMIT_WAITS) throw err;
-      await new Promise((r) => setTimeout(r, RATE_LIMIT_WAIT_MS));
+      gapMs = RATE_LIMIT_GAP_MS;
+      nextCallAt = Date.now() + gapMs;
     }
   }
 }
@@ -122,7 +128,7 @@ export async function runAgent(opts: {
     const tools = (await mcp.listTools()).tools.filter((t) => opts.agent.tools.includes(t.name));
     const turn: Turn = { agent: opts.agent, task: opts.task, mcp, tools };
     return provider === "openai"
-      ? await withOpenAI(turn, opts.openai ?? new OpenAI({ maxRetries: OPENAI_RETRIES }), opts.openaiModel ?? process.env.OPENAI_MODEL ?? OPENAI_MODEL)
+      ? await withOpenAI(turn, opts.openai ?? new OpenAI({ maxRetries: 0 }), opts.openaiModel ?? process.env.OPENAI_MODEL ?? OPENAI_MODEL)
       : await withClaude(turn, opts.anthropic ?? new Anthropic());
   } finally {
     await mcp.close();
