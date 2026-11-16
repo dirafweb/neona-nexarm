@@ -1,0 +1,173 @@
+<!DOCTYPE html><html lang="es"><head><meta charset="utf-8">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Sora:wght@600;700;800&display=swap">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:1080px;height:1920px;overflow:hidden;background:#06152f}
+body{position:relative;font-family:"IBM Plex Sans",sans-serif;color:#fff}
+#bg{position:absolute;inset:0;background:url(img/fondo.png) center/cover;opacity:.38}
+#velo{position:absolute;inset:0;background:radial-gradient(ellipse at 50% 38%,rgba(10,42,94,.25),rgba(6,21,47,.92) 78%)}
+.s{position:absolute;left:0;top:0;width:800px;height:1422px;zoom:1.35;opacity:0;padding:210px 52px 0}
+.mono{font:500 26px/1.3 "IBM Plex Mono",monospace;letter-spacing:.12em;text-transform:uppercase;color:#7fd3f2}
+.big{font:800 150px/1 Sora,sans-serif;letter-spacing:.02em;text-align:center}
+.card{background:rgba(13,50,112,.72);border:2px solid #2f4f86;border-radius:26px;padding:34px}
+.sub{position:absolute;left:44px;right:44px;bottom:150px;text-align:center;font:600 40px/1.25 Sora,sans-serif;text-wrap:balance;
+  text-shadow:0 6px 30px rgba(0,0,0,.8)}
+.sub b{color:#00A3E0}
+/* 1 */
+#s1 .big{color:#6d7890}
+.row{display:grid;grid-template-columns:1.2fr 1fr 1fr 1fr;gap:16px;align-items:center;padding:20px 0;border-bottom:1px solid #2b3a57;font-size:30px;color:#aab4c6}
+.hueco{height:44px;border-radius:10px;border:2px dashed #b4505a;background:rgba(180,35,24,.14)}
+.lleno{height:44px;border-radius:10px;background:#263654}
+.tagrojo{display:inline-block;font:500 24px "IBM Plex Mono",monospace;letter-spacing:.1em;color:#ff8f85;border:2px solid #ff8f85;border-radius:99px;padding:6px 18px}
+/* 2 */
+#n2{font:800 230px/1 Sora,sans-serif;text-align:center;color:#ff8f85;font-variant-numeric:tabular-nums}
+.msg{display:flex;justify-content:space-between;align-items:center;margin-top:22px;font-size:34px}
+.msg small{font:500 24px "IBM Plex Mono",monospace;color:#ff8f85}
+/* 3 */
+#s3 .big,#s6 .big{color:#fff;text-shadow:0 0 60px rgba(0,163,224,.75)}
+#s3 .big span{display:inline-block}
+.arm{color:#00A3E0}
+.lema{font:600 54px/1.25 Sora,sans-serif;text-align:center;margin-top:44px;text-wrap:balance}
+/* 4 */
+.item{display:flex;justify-content:space-between;align-items:center;font-size:38px;padding:22px 0;border-bottom:1px solid #2f4f86}
+.item:last-child{border:0}
+.chk{display:inline-block;width:44px;height:44px;border-radius:50%;border:3px solid #4a6aa0;margin-right:22px;vertical-align:-9px}
+.item.on .chk{background:#00B386;border-color:#00B386}
+.item em{font:500 24px "IBM Plex Mono",monospace;font-style:normal;letter-spacing:.08em;color:#4a6aa0}
+.item.on em{color:#00B386}
+.pista{height:22px;border-radius:11px;background:#0a2550;margin-top:22px;overflow:hidden}
+.pista u{display:block;height:100%;width:0;border-radius:11px;background:#00A3E0}
+.punt{display:flex;justify-content:space-between;align-items:baseline;font-size:38px}
+.punt b{font:700 84px Sora,sans-serif;font-variant-numeric:tabular-nums}
+/* 5 */
+.btn{display:inline-block;font:600 34px "IBM Plex Sans";padding:18px 44px;border-radius:14px;border:2px solid #4a6aa0;margin:26px 18px 0 0}
+.btn.go{background:#00A3E0;border-color:#00A3E0;color:#06152f}
+.cad{display:grid;grid-template-columns:repeat(2,1fr);gap:18px;margin-top:26px}
+.blo{border:2px solid #2f4f86;border-radius:16px;padding:18px 14px;font:500 22px/1.5 "IBM Plex Mono",monospace;color:#c9d6ea;background:rgba(13,50,112,.72);position:relative}
+.blo b{display:block;color:#7fd3f2}
+.ok{color:#00B386;font:600 32px Sora,sans-serif;margin-top:22px;text-align:center}
+/* 6 */
+.iso{display:block;margin:40px auto 30px}
+.pie{font:500 28px/1.5 "IBM Plex Mono",monospace;letter-spacing:.06em;color:#c9d6ea;text-align:center;margin-top:60px}
+</style></head><body>
+<div id="bg"></div><div id="velo"></div>
+
+<section class="s" id="s1">
+  <p class="mono">// 01 · El problema</p>
+  <div class="big" style="margin:50px 0 60px">CRM</div>
+  <div class="card"><div style="text-align:right;margin-bottom:10px"><span class="tagrojo">LLENADO MANUAL</span></div>
+    <div class="row r1"><span>Cliente 01</span><i class="lleno"></i><i class="hueco"></i><i class="hueco"></i></div>
+    <div class="row r1"><span>Cliente 02</span><i class="hueco"></i><i class="hueco"></i><i class="lleno"></i></div>
+    <div class="row r1"><span>Cliente 03</span><i class="hueco"></i><i class="lleno"></i><i class="hueco"></i></div>
+    <div class="row r1"><span>Cliente 04</span><i class="hueco"></i><i class="hueco"></i><i class="hueco"></i></div>
+    <div class="row r1"><span>Cliente 05</span><i class="lleno"></i><i class="hueco"></i><i class="hueco"></i></div>
+  </div>
+  <p class="sub">Tu CRM no vende.<br><b>Espera a que alguien lo llene.</b></p>
+</section>
+
+<section class="s" id="s2">
+  <p class="mono">// 02 · Lo que cuesta</p>
+  <div id="n2" style="margin-top:70px">0</div>
+  <p class="mono" style="text-align:center;color:#ff8f85">mensajes sin responder</p>
+  <div class="card" style="margin-top:60px">
+    <div class="msg m2"><span>«¿Tienen disponibilidad?»</span><small>espera 9 min</small></div>
+    <div class="msg m2"><span>«¿Cuánto cuesta el plan?»</span><small>espera 16 min</small></div>
+    <div class="msg m2"><span>«Quiero comprar hoy»</span><small>espera 41 min</small></div>
+  </div>
+  <p class="sub">Los mensajes se acumulan.<br><b>El prospecto que quería comprar se enfría.</b></p>
+</section>
+
+<section class="s" id="s3">
+  <p class="mono" style="text-align:center">// 03 · La respuesta</p>
+  <svg class="iso" viewBox="0 0 640 640" width="230" height="230" id="iso3"></svg>
+  <div class="big" style="font-size:124px"><span id="nex">NEX</span><span class="arm" id="arm">ARM</span></div>
+  <p class="lema" id="lema3">Un ARM: el CRM que operan<br>los agentes de IA</p>
+</section>
+
+<section class="s" id="s4">
+  <p class="mono">// 04 · Lo que hacen los agentes</p>
+  <div class="card" style="margin-top:50px">
+    <div class="item i4"><span><i class="chk"></i>Registran al cliente</span><em>AUTOMÁTICO</em></div>
+    <div class="item i4"><span><i class="chk"></i>Responden el mensaje</span><em>AUTOMÁTICO</em></div>
+    <div class="item i4"><span><i class="chk"></i>Califican con puntaje</span><em>AUTOMÁTICO</em></div>
+    <div class="item i4"><span><i class="chk"></i>Mueven el trato</span><em>AUTOMÁTICO</em></div>
+  </div>
+  <div class="card" style="margin-top:36px" id="ficha">
+    <p class="mono">Prospecto calificado</p>
+    <div class="punt"><span>Ana Torres · <span style="color:#7fd3f2" id="niv">en seguimiento</span></span><b id="n4">0</b></div>
+    <div class="pista"><u id="u4"></u></div>
+    <p style="font-size:30px;color:#c9d6ea;margin-top:20px">Tiene el problema, el presupuesto y quién decide.</p>
+  </div>
+</section>
+
+<section class="s" id="s5" style="padding-top:120px">
+  <p class="mono">// 05 · Gobernanza</p>
+  <div class="card" style="margin-top:30px" id="apr">
+    <p class="mono">Por aprobar</p>
+    <p style="font-size:40px;margin-top:14px"><b>seguimiento</b> quiere enviar un correo</p>
+    <p style="font-size:32px;color:#c9d6ea;margin-top:8px">Para: Ana Torres · política: toda salida espera a una persona</p>
+    <span class="btn go" id="bok">Aprobar</span><span class="btn">Rechazar</span>
+  </div>
+  <p class="mono" style="margin-top:36px">Libro de auditoría</p>
+  <div class="cad">
+    <div class="blo b5"><b>#41</b>contact_create<br>9f2c…a1</div>
+    <div class="blo b5"><b>#42</b>contact_qualify<br>4be0…7d</div>
+    <div class="blo b5"><b>#43</b>message_send<br>c71a…e3</div>
+    <div class="blo b5"><b>#44</b>deal_move_stage<br>08fd…5b</div>
+  </div>
+  <p class="ok" id="ok5">● Cadena íntegra</p>
+  <p class="sub">Nada sale sin control:<br><b>políticas, aprobación humana y auditoría.</b></p>
+</section>
+
+<section class="s" id="s6">
+  <svg class="iso" viewBox="0 0 640 640" width="280" height="280" id="iso6" style="margin-top:110px"></svg>
+  <div class="big" style="font-size:124px">NEX<span class="arm">ARM</span></div>
+  <p class="lema">Los agentes operan.<br><span class="arm">Tú supervisas.</span></p>
+  <p class="pie">neona.tech<br>Diseñado conforme a ISO 9001,<br>ISO/IEC 27001 e ISO/IEC 42001</p>
+</section>
+
+<script>
+const ISO='<mask id="n" maskUnits="userSpaceOnUse" x="0" y="0" width="640" height="640"><rect width="640" height="640" fill="#fff"/><rect x="299" y="170" width="42" height="300" fill="#000" transform="rotate(-52 320 320)"/></mask><polygon fill="#fff" mask="url(#n)" points="272,50 320,20 368,50 368,590 320,620 272,590"/><polygon fill="#fff" points="193.8,302.6 58.7,224.6 56.7,168 106.7,141.4 241.8,219.4 243.8,276"/><polygon fill="#00A3E0" points="398.2,219.4 533.3,141.4 583.3,168 581.3,224.6 446.2,302.6 396.2,276"/><polygon fill="#00A3E0" points="241.8,420.6 106.7,498.6 56.7,472 58.7,415.4 193.8,337.4 243.8,364"/><polygon fill="#fff" points="446.2,337.4 581.3,415.4 583.3,472 533.3,498.6 398.2,420.6 396.2,364"/>';
+iso3.innerHTML=ISO; iso6.innerHTML=ISO.replace(/id="n"/,'id="n6"').replace('url(#n)','url(#n6)');
+const CORTES=[0,4.9,12.7,20.1,28.5,37.6,43.0];
+const p=(t,s,d)=>Math.min(1,Math.max(0,(t-s)/d));
+const eo=x=>1-Math.pow(1-x,3);
+const $=q=>[...document.querySelectorAll(q)];
+const entra=(el,a,dy=40)=>{el.style.opacity=a.toFixed(3);el.style.transform='translateY('+(dy*(1-a)).toFixed(1)+'px)'};
+function render(t){
+  bg.style.transform='scale('+(1.05+t*0.004).toFixed(4)+')';
+  for(let i=0;i<6;i++){
+    const el=document.getElementById('s'+(i+1)), a=CORTES[i], b=CORTES[i+1];
+    const v=Math.min(p(t,a,0.35), i<5?1-p(t,b-0.3,0.3):1);
+    el.style.opacity=(t>=a&&t<b+0.01?v:0).toFixed(3);
+  }
+  let u=t-CORTES[0];
+  $('.r1').forEach((e,i)=>entra(e,eo(p(u,0.3+i*0.22,0.4)),24));
+  u=t-CORTES[1];
+  n2.textContent=Math.round(200*eo(p(u,0.3,5.6)));
+  $('.m2').forEach((e,i)=>entra(e,eo(p(u,1.0+i*1.1,0.5))));
+  u=t-CORTES[2];
+  entra(iso3,eo(p(u,0.2,0.7)),0); iso3.style.transform='rotate('+(-90*(1-eo(p(u,0.2,1.2)))).toFixed(1)+'deg) scale('+(0.6+0.4*eo(p(u,0.2,0.9))).toFixed(3)+')';
+  entra(nex,eo(p(u,0.9,0.5)),60); entra(arm,eo(p(u,1.5,0.5)),60);
+  entra(lema3,eo(p(u,2.6,0.6)));
+  u=t-CORTES[3];
+  const t4=[0.5,2.1,3.3,6.3];
+  $('.i4').forEach((e,i)=>{entra(e,eo(p(u,0.2+i*0.12,0.4)),20);e.classList.toggle('on',u>=t4[i])});
+  entra(ficha,eo(p(u,3.0,0.5)));
+  const sc=Math.round(75*eo(p(u,3.6,1.8)));
+  n4.textContent=sc; u4.style.width=sc+'%';
+  niv.textContent=sc>=75?'listo para venta':sc>=50?'interesado':'en seguimiento';
+  niv.style.color=sc>=75?'#00B386':'#7fd3f2';
+  u=t-CORTES[4];
+  entra(apr,eo(p(u,0.3,0.5)));
+  const hecho=u>=3.8;
+  bok.textContent=hecho?'Aprobado ✓':'Aprobar';
+  bok.style.background=hecho?'#00B386':'#00A3E0'; bok.style.borderColor=bok.style.background;
+  bok.style.transform='scale('+(1+0.08*Math.sin(Math.PI*p(u,3.6,0.4))).toFixed(3)+')';
+  $('.b5').forEach((e,i)=>entra(e,eo(p(u,5.0+i*0.4,0.4)),30));
+  entra(ok5,eo(p(u,7.0,0.5)),0);
+  u=t-CORTES[5];
+  iso6.style.transform='scale('+(0.7+0.3*eo(p(u,0.1,0.8))).toFixed(3)+')';
+}
+window.render=render; render(0);
+</script></body></html>

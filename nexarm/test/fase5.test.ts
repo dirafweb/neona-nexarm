@@ -198,6 +198,20 @@ await check("un contacto que pidio no ser contactado no recibe nada, aunque una 
   assert.equal(sent.length, 1);
 });
 
+await check("calificacion pone puntaje a un prospecto, la consola lo lista y una persona lo revierte", async () => {
+  const lead = (await done(prospeccion, "contact_create", { name: "Sara Puntaje", email: "sara@acme.test" })).data.id;
+  await assert.rejects(call(calificacion, "contact_qualify", { id: lead, score: 140, reason: "x" }));
+  assert.match((await call(prospeccion, "contact_qualify", { id: lead, score: 50, reason: "x" })).reason!, /permiso fino/);
+  await done(calificacion, "contact_qualify", { id: lead, score: 50, reason: "Tiene problema y presupuesto" });
+  const second = await done(calificacion, "contact_qualify", { id: lead, score: 75, reason: "Ya dijo quien decide" });
+  const home = (await web("/", { cookie: eathan })).text;
+  assert.match(home, /Sara Puntaje<small>listo para venta<\/small>/);
+  assert.match(home, /Ya dijo quien decide/);
+  assert.equal((await revertWeb(second.auditSeq)).status, 200);
+  assert.deepEqual((await rows("select score, score_reason from contacts where id = $1", [lead]))[0],
+    { score: 50, score_reason: "Tiene problema y presupuesto" });
+});
+
 await check("solo seguimiento envia mensajes; el libro sigue integro", async () => {
   for (const agent of [prospeccion, calificacion]) {
     assert.match((await call(agent, "message_send", { channel: "correo", contact_id: contactId, subject: "x", body: "y" })).reason!, /permiso fino/);

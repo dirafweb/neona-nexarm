@@ -112,6 +112,31 @@ export const tools: Tool[] = [
     },
   },
   {
+    name: "contact_qualify",
+    description:
+      "Califica a un contacto como prospecto: puntaje de 0 a 100 y el motivo en una frase. " +
+      "Reemplaza la calificacion anterior.",
+    minRole: "operador",
+    write: true,
+    undo: {
+      async before(tx, a) {
+        return (await tx.query("select score, score_reason, scored_at from contacts where id = $1", [a.id])).rows[0] ?? null;
+      },
+      async revert(tx, s) {
+        await tx.query("update contacts set score = $2, score_reason = $3, scored_at = $4 where id = $1",
+          [s.args.id, s.before.score, s.before.score_reason, s.before.scored_at]);
+      },
+    },
+    input: { id: uuid, score: z.number().int().min(0).max(100), reason: z.string().min(1).max(500) },
+    async run(tx, { now }, a) {
+      const r = await tx.query(
+        "update contacts set score = $2, score_reason = $3, scored_at = $4 where id = $1 returning id, name, score, score_reason",
+        [a.id, a.score, a.reason, now.toISOString()]);
+      if (!r.rows[0]) throw new Error("contacto no encontrado");
+      return r.rows[0];
+    },
+  },
+  {
     name: "contact_search",
     description: "Busca contactos por nombre, correo o telefono.",
     minRole: "lector",
@@ -119,7 +144,7 @@ export const tools: Tool[] = [
     input: { query: z.string().default(""), limit: z.number().int().min(1).max(100).default(20) },
     async run(tx, _ctx, a) {
       const r = await tx.query(
-        `select id, name, email, phone, company_id from contacts
+        `select id, name, email, phone, company_id, score, score_reason from contacts
          where $1 = '' or name ilike '%'||$1||'%' or email ilike '%'||$1||'%' or phone ilike '%'||$1||'%'
          order by created_at desc limit $2`, [a.query, a.limit]);
       return { contacts: r.rows };

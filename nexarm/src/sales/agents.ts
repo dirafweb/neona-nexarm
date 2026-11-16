@@ -28,13 +28,15 @@ export const SALES_AGENTS: SalesAgent[] = [
   {
     name: "calificacion",
     role: "operador",
-    tools: ["contact_search", "contact_update", "pipeline_list", "deal_list", "deal_move_stage", "activity_log",
+    tools: ["contact_search", "contact_update", "contact_qualify", "pipeline_list", "deal_list", "deal_move_stage", "activity_log",
       "activity_list", "approval_status"],
     brief:
       "Decides si un trato en Prospecto merece tiempo de venta. Calificas con cuatro preguntas: tiene un problema " +
       "que Nexarm resuelve, tiene presupuesto, quien decide, y para cuando lo necesita. Lees las actividades del " +
       "trato, anotas tu evaluacion como nota, y mueves a Calificado solo los tratos con al menos tres respuestas " +
-      "claras. Si faltan datos, el trato se queda donde esta y la nota dice exactamente que falta preguntar.",
+      "claras. Si faltan datos, el trato se queda donde esta y la nota dice exactamente que falta preguntar. " +
+      "A cada contacto que evaluas le pones su puntaje con contact_qualify: 25 puntos por cada respuesta clara, " +
+      "y en el motivo, cuales respuestas tiene y cuales faltan.",
     defaultTask: "Califica los tratos en etapa Prospecto con la informacion que ya hay en sus actividades.",
   },
   {

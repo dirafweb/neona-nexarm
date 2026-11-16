@@ -9,7 +9,7 @@
     "libro": "tsx src/audit-cli.ts",
     "detener": "node -e \"require('fs').writeFileSync('data/.detener','')\"",
     "agente": "tsx src/sales/run.ts",
-    "test": "tsx test/fase1.test.ts && tsx test/fase2.test.ts && tsx test/fase3.test.ts && tsx test/fase4.test.ts && tsx test/fase5.test.ts && tsx test/fase6.test.ts && tsx test/fase7.test.ts && tsx test/fase8.test.ts",
+    "test": "tsx test/fase1.test.ts && tsx test/fase2.test.ts && tsx test/fase3.test.ts && tsx test/fase4.test.ts && tsx test/fase5.test.ts && tsx test/fase6.test.ts && tsx test/fase7.test.ts && tsx test/fase8.test.ts && tsx test/fase9.test.ts",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {

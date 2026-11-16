@@ -116,6 +116,7 @@ export function mountConsole(app: express.Express, db: Db, now: () => Date, base
     const human = await guard(req, res);
     if (!human) return;
     const t = now().toISOString();
+    const week = new Date(now().getTime() - 7 * 86_400_000).toISOString();
     const data = await withTenant(db, human.tenantId, async (tx) => ({
       pending: (await tx.query<any>(
         `select p.id, p.tool, p.args, p.reason, p.policy, p.requested_at, p.expires_at, a.name as agent,
@@ -132,6 +133,24 @@ export function mountConsole(app: express.Express, db: Db, now: () => Date, base
            u.audit_seq is not null as revertible, u.reverted_at
          from audit_log l left join undo_snapshots u on u.audit_seq = l.seq order by l.seq desc limit 30`)).rows,
       paused: (await tx.query<{ paused: boolean }>("select paused from tenants")).rows[0]!.paused,
+      arm: (await tx.query<any>(
+        `select
+           (select count(*) from audit_log where actor = 'agente' and outcome = 'ejecutado' and at > $1)::int as by_agents,
+           (select count(*) from audit_log where actor = 'humano' and at > $1)::int as by_humans,
+           (select count(*) from contacts)::int as contacts,
+           (select count(*) from contacts where email is not null and phone is not null)::int as complete,
+           (select count(*) from activities where body like 'RECIBIDO por %' and created_at > $1)::int as received,
+           (select count(*) from activities where body like 'ENVIADO por %' and created_at > $1)::int as sent,
+           (select extract(epoch from percentile_cont(0.5) within group (order by r.reply - r.at)) from (
+              select a.created_at as at, (select min(b.created_at) from activities b
+                where b.contact_id = a.contact_id and b.body like 'ENVIADO por %' and b.created_at > a.created_at) as reply
+              from activities a where a.body like 'RECIBIDO por %' and a.created_at > $1) r
+            where r.reply is not null)::float as reply_seconds`, [week])).rows[0],
+      ranked: (await tx.query<{ name: string; score: number; score_reason: string }>(
+        "select name, score, score_reason from contacts where score is not null order by score desc, scored_at desc limit 5")).rows,
+      stages: (await tx.query<{ name: string; deals: number }>(
+        `select s.name, count(d.id)::int as deals from stages s left join deals d on d.stage_id = s.id
+         group by s.id, s.pipeline_id, s.name, s.position order by s.pipeline_id, s.position`)).rows,
     }));
     const chain = await verifyChain(db, human.tenantId);
     const can = human.role === "supervisor";
@@ -175,12 +194,37 @@ export function mountConsole(app: express.Express, db: Db, now: () => Date, base
     const stop = `<div class="card">${data.paused
       ? `<b class="no">Operación detenida.</b> Ningún agente ejecuta nada.`
       : `<b class="ok">Agentes operando.</b>`}
-      <span class="mut"> Canales de envío: ${channels.length ? esc(channels.join(", ")) : "ninguno configurado"}.</span>
+      <span class="mut"> Canales de envío: ${channels.length ? esc(channels.join(", ")) : "ninguno configurado"}.
+      Agentes automáticos: ${process.env.NEXARM_AGENTES_AUTO === "1" ? "atienden cada mensaje entrante" : "apagados"}.</span>
       ${can ? `<form class="row" method="post" action="/pausa">
         <button name="detener" value="${data.paused ? "no" : "si"}">${data.paused ? "Reanudar agentes" : "Detener todos los agentes"}</button>
       </form>` : ""}</div>`;
 
+    const a = data.arm;
+    const total = a.by_agents + a.by_humans;
+    const span = (sec: number) => sec < 90 ? `${Math.round(sec)} s` : sec < 5400 ? `${Math.round(sec / 60)} min` : `${Math.round(sec / 3600)} h`;
+    const tile = (value: string, label: string, sub: string) =>
+      `<div class="tile"><b>${esc(value)}</b><span>${esc(label)}</span><small>${esc(sub)}</small></div>`;
+    const most = Math.max(1, ...data.stages.map((s) => s.deals));
+    const funnel = data.stages.map((s) => `<div class="bar"><span>${esc(s.name)}</span>
+      <i><u style="width:${Math.round(s.deals / most * 100)}%"></u></i><b>${s.deals}</b></div>`).join("");
+    const level = (n: number) => n >= 75 ? "listo para venta" : n >= 50 ? "interesado" : "en seguimiento";
+    const ranked = data.ranked.map((c) => `<div class="bar"><span>${esc(c.name)}<small>${esc(level(c.score))}</small></span>
+      <i><u style="width:${c.score}%"></u></i><b>${c.score}</b><em>${esc(c.score_reason)}</em></div>`).join("");
+    const arm = `<section class="arm">
+      <p class="tag">// ARM · Últimos 7 días</p><h1>Los agentes operan. Tú supervisas.</h1>
+      <div class="tiles">
+        ${tile(String(a.by_agents), "acciones de agentes", total ? `${Math.round(a.by_agents / total * 100)} % de la operación · ${a.by_humans} de personas` : "sin actividad")}
+        ${tile(a.reply_seconds == null ? "sin datos" : span(a.reply_seconds), "tiempo de respuesta", "mediana entre el mensaje del cliente y la respuesta")}
+        ${tile(`${a.complete} de ${a.contacts}`, "fichas completas", "con correo y teléfono")}
+        ${tile(`${a.received} / ${a.sent}`, "mensajes", "recibidos / enviados")}
+      </div>
+      ${ranked ? `<p class="tag">Prospectos calificados</p>${ranked}` : ""}
+      ${funnel ? `<p class="tag" style="margin-top:18px">Tratos por etapa</p>${funnel}` : ""}
+    </section>`;
+
     res.send(page("Consola", `
+      ${arm}
       ${stop}
       <p class="tag">// 01 · Aprobaciones</p><h1>Por aprobar (${data.pending.length})</h1>${pending}
       <p class="tag">// 02 · Agentes</p><h2>Agentes</h2><div class="scroll"><table><tr><th>Agente</th><th>Rol</th><th>Estado</th><th>Vence</th><th></th></tr>${agents}</table></div>

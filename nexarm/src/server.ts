@@ -1,5 +1,5 @@
 import express from "express";
-import { existsSync, rmSync } from "node:fs";
+import { existsSync, readFileSync, rmSync } from "node:fs";
 import { pathToFileURL } from "node:url";
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/streamableHttp.js";
@@ -8,6 +8,9 @@ import { mountChatwoot } from "./chatwoot.ts";
 import { mountConsole } from "./console.ts";
 import { openDb, type Db } from "./db.ts";
 import { execute, identify, type Agent } from "./gateway.ts";
+import { SALES_AGENTS } from "./sales/agents.ts";
+import { startAuto } from "./sales/auto.ts";
+import { runAgent } from "./sales/run.ts";
 import { tools } from "./tools.ts";
 import { mountXencrmGovernance, startXencrm } from "./xencrm.ts";
 
@@ -75,10 +78,24 @@ if (import.meta.url === pathToFileURL(process.argv[1] ?? "").href) {
   rmSync(stopFile, { force: true });
   let stopping = false;
   const xencrm = startXencrm(db);
+  // NEXARM_AGENTES_AUTO=1: cada mensaje entrante despierta a los agentes de venta, con las credenciales que dejo pnpm seed.
+  let auto: ReturnType<typeof startAuto> | undefined;
+  if (process.env.NEXARM_AGENTES_AUTO === "1") {
+    const tokens: Record<string, string> = JSON.parse(readFileSync(".tokens.local.json", "utf8")).tokens ?? {};
+    const first = await identify(db, tokens[SALES_AGENTS[0]!.name] ?? "");
+    if (first) {
+      const mcpUrl = new URL("/mcp", `http://127.0.0.1:${port}`);
+      auto = startAuto({ tenantId: first.tenantId, run: (agent, task) => runAgent({ agent, token: tokens[agent.name]!, task, mcpUrl }) });
+      console.log("Nexarm: agentes automaticos encendidos, atienden cada mensaje entrante");
+    } else {
+      console.error("Agentes automaticos apagados: .tokens.local.json no trae credenciales vigentes. Arreglo: pnpm seed con el servidor detenido.");
+    }
+  }
   const stop = async () => {
     if (stopping) return;
     stopping = true;
     xencrm?.stop();
+    auto?.stop();
     await db.close();
     rmSync(stopFile, { force: true });
     console.log("Nexarm detenido con la base cerrada");

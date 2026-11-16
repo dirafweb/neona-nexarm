@@ -12,6 +12,10 @@ export type Provider = "anthropic" | "openai";
 const ANTHROPIC_MODEL = "claude-opus-5-5";
 const OPENAI_MODEL = "gpt-5.5";
 const MAX_ITERATIONS = 40;
+/** Una cuenta con pocas llamadas por minuto responde 429: el SDK espera lo que la API indica y reintenta. */
+const OPENAI_RETRIES = 4;
+const RATE_LIMIT_WAITS = 8;
+const RATE_LIMIT_WAIT_MS = 25_000;
 
 /** NEXARM_PROVEEDOR manda. Sin el, se usa el proveedor cuya clave este en el entorno. */
 export function pickProvider(env: NodeJS.ProcessEnv = process.env): Provider {
@@ -58,6 +62,18 @@ async function withClaude({ agent, task, mcp, tools }: Turn, anthropic: Anthropi
   return final.stop_reason === "tool_use" ? outOfSteps(text) : { report: text, stopReason: final.stop_reason };
 }
 
+/** Con el cupo por minuto agotado, espera a que se libere y repite la llamada. */
+async function paced<T>(call: () => Promise<T>): Promise<T> {
+  for (let attempt = 0; ; attempt++) {
+    try {
+      return await call();
+    } catch (err) {
+      if (!(err instanceof OpenAI.RateLimitError) || attempt >= RATE_LIMIT_WAITS) throw err;
+      await new Promise((r) => setTimeout(r, RATE_LIMIT_WAIT_MS));
+    }
+  }
+}
+
 async function withOpenAI({ agent, task, mcp, tools }: Turn, openai: OpenAI, model: string): Promise<RunResult> {
   const messages: OpenAI.Chat.ChatCompletionMessageParam[] = [
     { role: "system", content: systemPrompt(agent) },
@@ -68,7 +84,7 @@ async function withOpenAI({ agent, task, mcp, tools }: Turn, openai: OpenAI, mod
   }));
   let last = "";
   for (let i = 0; i < MAX_ITERATIONS; i++) {
-    const choice = (await openai.chat.completions.create({ model, messages, tools: functions })).choices[0]!;
+    const choice = (await paced(() => openai.chat.completions.create({ model, messages, tools: functions }))).choices[0]!;
     const message = choice.message;
     messages.push(message);
     last = (message.content ?? message.refusal ?? "").trim();
@@ -106,7 +122,7 @@ export async function runAgent(opts: {
     const tools = (await mcp.listTools()).tools.filter((t) => opts.agent.tools.includes(t.name));
     const turn: Turn = { agent: opts.agent, task: opts.task, mcp, tools };
     return provider === "openai"
-      ? await withOpenAI(turn, opts.openai ?? new OpenAI(), opts.openaiModel ?? process.env.OPENAI_MODEL ?? OPENAI_MODEL)
+      ? await withOpenAI(turn, opts.openai ?? new OpenAI({ maxRetries: OPENAI_RETRIES }), opts.openaiModel ?? process.env.OPENAI_MODEL ?? OPENAI_MODEL)
       : await withClaude(turn, opts.anthropic ?? new Anthropic());
   } finally {
     await mcp.close();

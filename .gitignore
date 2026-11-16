@@ -13,3 +13,7 @@ xencrm/
 # capturas del sitio de SendPulse: queda solo el analisis
 benchmark-sendpulse/capture-*/
 benchmark-sendpulse/*.cany
+
+# cuadros del video: se regeneran con video-arm/grabar.py
+video-arm/cuadros*/
+__pycache__/

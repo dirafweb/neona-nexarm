@@ -94,6 +94,7 @@ await check("la consola exige sesion y rechaza una clave incorrecta", async () =
   const home = await web("/", { cookie: eathan });
   assert.equal(home.status, 200);
   assert.match(home.text, /Por aprobar \(0\)/);
+  assert.match(home.text, /acciones de agentes/);
 });
 
 let policyApproval = "";

@@ -17,6 +17,14 @@ export interface Result {
   outcome: Outcome; data?: unknown; reason?: string; policy?: string; approvalId?: string; auditSeq: number;
 }
 
+type Listener = (agent: Agent, tool: string, data: unknown) => void;
+const listeners = new Set<Listener>();
+/** Avisa cada accion que un agente ejecuto. Devuelve como dejar de escuchar. */
+export function onExecuted(fn: Listener): () => void {
+  listeners.add(fn);
+  return () => { listeners.delete(fn); };
+}
+
 const rank: Record<Role, number> = { lector: 1, operador: 2, admin: 3 };
 const byName = new Map<string, Tool>(tools.map((t) => [t.name, t]));
 const writeTools = tools.filter((t) => t.write).map((t) => t.name);
@@ -104,7 +112,7 @@ export async function execute(db: Db, agent: Agent, toolName: string, rawArgs: u
   const args = parsed.data as Record<string, unknown>;
 
   try {
-    return await withTenant(db, agent.tenantId, async (tx): Promise<Result> => {
+    const res = await withTenant(db, agent.tenantId, async (tx): Promise<Result> => {
       // El candado va antes de evaluar: dos llamadas simultaneas no pueden pasar juntas un limite de frecuencia.
       await tx.query("select pg_advisory_xact_lock(hashtext($1))", [agent.tenantId]);
       let restricted = new Set<string>();
@@ -137,6 +145,8 @@ export async function execute(db: Db, agent: Agent, toolName: string, rawArgs: u
       const { data, seq } = await runAndRecord(tx, agent, tool, args, restricted, now);
       return { outcome: "ejecutado", data, auditSeq: seq };
     });
+    if (res.outcome === "ejecutado") for (const fn of listeners) fn(agent, toolName, res.data);
+    return res;
   } catch (err) {
     if (err instanceof PolicyDenied) return deny(err.message, args, err.policy);
     const reason = err instanceof Error ? err.message : String(err);

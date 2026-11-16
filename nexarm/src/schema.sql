@@ -226,6 +226,11 @@ alter table tenants add column if not exists paused boolean not null default fal
 -- Un contacto que pidio no ser contactado no recibe mensajes de ningun agente.
 alter table contacts add column if not exists do_not_contact boolean not null default false;
 
+-- Calificacion del prospecto: puntaje de 0 a 100 que pone un agente, con su motivo.
+alter table contacts add column if not exists score int check (score between 0 and 100);
+alter table contacts add column if not exists score_reason text;
+alter table contacts add column if not exists scored_at timestamptz;
+
 -- Lo necesario para deshacer una accion. Vive fuera del libro: guarda el estado previo sin enmascarar
 -- y ninguna herramienta lo lee.
 create table if not exists undo_snapshots (
