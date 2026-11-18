@@ -3,3 +3,7 @@ data/
 .tokens.local.json
 .chatwoot.local.json
 .xencrm.local.json
+
+.vercel
+.env*
+nube/

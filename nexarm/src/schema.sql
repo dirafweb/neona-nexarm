@@ -202,6 +202,14 @@ create table if not exists oauth_codes (
   redirect_uri text not null,
   expires_at timestamptz not null
 );
+-- Solicitud de conexion a la espera de que el supervisor elija el agente. Vive aqui para que la vea cualquier instancia.
+create table if not exists oauth_consents (
+  id text primary key,
+  user_id uuid not null references users(id),
+  client jsonb not null,
+  params jsonb not null,
+  expires_at timestamptz not null
+);
 create table if not exists oauth_tokens (
   token_hash text primary key,
   kind text not null check (kind in ('acceso','refresco')),

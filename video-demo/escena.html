@@ -1,0 +1,197 @@
+<!DOCTYPE html><html lang="es"><head><meta charset="utf-8">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Sora:wght@600;700;800&display=swap">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:1920px;height:1080px;overflow:hidden;background:#06152f}
+body{position:relative;font-family:"IBM Plex Sans",sans-serif;color:#fff}
+#bg{position:absolute;inset:0;background:url(../video-arm/img/fondo.png) center/cover;opacity:.3}
+#velo{position:absolute;inset:0;background:radial-gradient(ellipse at 50% 40%,rgba(10,42,94,.2),rgba(6,21,47,.94) 80%)}
+.s{position:absolute;inset:0;opacity:0}
+.mono{font:500 24px/1.3 "IBM Plex Mono",monospace;letter-spacing:.14em;text-transform:uppercase;color:#7fd3f2}
+.arm{color:#00A3E0}
+.card{background:rgba(13,50,112,.78);border:2px solid #2f4f86;border-radius:22px;padding:26px 30px}
+h1{font:800 76px/1.08 Sora,sans-serif;text-wrap:balance}
+/* marca fija */
+#marca{position:absolute;left:70px;top:44px;display:flex;align-items:center;gap:16px;font:700 30px Sora,sans-serif;letter-spacing:.14em;opacity:0}
+#barra{position:absolute;left:0;bottom:0;height:6px;background:#00A3E0;width:0}
+/* intro y cierre */
+.centro{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}
+.logo{font:800 170px/1 Sora,sans-serif;letter-spacing:.03em;text-shadow:0 0 70px rgba(0,163,224,.7)}
+.lema{font:600 56px/1.25 Sora,sans-serif;margin-top:34px;text-wrap:balance}
+.pie{font:500 26px/1.6 "IBM Plex Mono",monospace;letter-spacing:.06em;color:#c9d6ea;margin-top:44px}
+/* entrada */
+#entrada .fila{position:absolute;left:90px;right:90px;top:330px;display:grid;grid-template-columns:300px 60px 330px 60px 1fr 60px 300px;align-items:center}
+.flecha{height:4px;background:#00A3E0;border-radius:2px;transform-origin:left}
+.chip{font:600 34px Sora,sans-serif;padding:26px 30px;border-radius:18px;background:rgba(13,50,112,.78);border:2px solid #2f4f86;margin:14px 0}
+.chip small,.ag small{display:block;font:500 20px "IBM Plex Mono",monospace;letter-spacing:.08em;color:#7fd3f2;margin-top:8px;text-transform:uppercase}
+.ag{font:600 32px Sora,sans-serif;padding:20px 26px;border-radius:18px;background:rgba(13,50,112,.78);border:2px solid #00A3E0;margin:12px 0}
+.tu{font:700 38px/1.2 Sora,sans-serif;padding:34px 28px;border-radius:18px;background:#00B386;color:#06152f;text-align:center}
+.tu small{display:block;font:500 20px "IBM Plex Mono",monospace;letter-spacing:.08em;margin-top:10px;text-transform:uppercase}
+/* consola */
+#ventana{position:absolute;left:70px;top:130px;width:1160px;height:880px;border-radius:18px;overflow:hidden;border:2px solid #2f4f86;
+  box-shadow:0 30px 90px rgba(0,0,0,.6);background:#2b3240}
+#tira{height:52px;background:#0a2550;display:flex;align-items:center;gap:10px;padding:0 20px;font:500 20px "IBM Plex Mono",monospace;color:#9fb3d1}
+#tira i{width:14px;height:14px;border-radius:50%;background:#2f4f86;display:block}
+#tira span{margin-left:16px}
+#vista{position:relative;height:828px;overflow:hidden}
+#pagina{position:absolute;left:0;top:0;transform-origin:0 0;will-change:transform}
+#pagina img{display:block;width:1548px;height:auto}
+.foco{position:absolute;border:4px solid #00A3E0;border-radius:12px;box-shadow:0 0 0 2000px rgba(6,21,47,.38),0 0 40px rgba(0,163,224,.9);opacity:0;pointer-events:none}
+.pan{position:absolute;left:1290px;top:210px;width:560px;opacity:0}
+.pan h2{font:800 58px/1.1 Sora,sans-serif;margin:22px 0 34px;text-wrap:balance}
+.pan li{list-style:none;font:500 34px/1.3 "IBM Plex Sans",sans-serif;color:#dbe6f6;padding:18px 0 18px 58px;position:relative;border-bottom:1px solid #223a66}
+.pan li::before{content:"";position:absolute;left:4px;top:22px;width:32px;height:32px;border-radius:50%;background:#00B386}
+.pan li::after{content:"";position:absolute;left:15px;top:29px;width:9px;height:15px;border:solid #06152f;border-width:0 4px 4px 0;transform:rotate(45deg)}
+/* abierto */
+#abierto .fila{position:absolute;left:90px;right:90px;top:360px;display:grid;grid-template-columns:330px 70px 230px 70px 1fr 70px 230px;align-items:center}
+.mcp{width:230px;height:230px;border-radius:50%;border:4px solid #00A3E0;display:flex;align-items:center;justify-content:center;font:800 64px Sora,sans-serif;
+  box-shadow:0 0 60px rgba(0,163,224,.6);background:rgba(13,50,112,.78)}
+.pas{padding:30px}
+.pas b{font:700 38px Sora,sans-serif;display:block;margin-bottom:16px}
+.pas span{display:block;font:500 28px/1.7 "IBM Plex Sans";color:#dbe6f6}
+.crm{font:800 60px Sora,sans-serif;text-align:center;padding:60px 0;border-radius:22px;border:2px solid #2f4f86;background:rgba(13,50,112,.78)}
+</style></head><body>
+<div id="bg"></div><div id="velo"></div>
+
+<section class="s" id="intro"><div class="centro">
+  <svg viewBox="0 0 640 640" width="230" height="230" id="iso1"></svg>
+  <div class="logo" style="margin-top:20px"><span id="nex">NEX</span><span class="arm" id="armt">ARM</span></div>
+  <p class="lema" id="lema1">El CRM que operan los agentes de IA</p>
+  <p class="lema arm" id="lema1b" style="margin-top:10px">Tú tienes el control</p>
+</div></section>
+
+<section class="s" id="entrada">
+  <p class="mono" style="position:absolute;left:90px;top:120px">// Cómo funciona</p>
+  <h1 style="position:absolute;left:90px;top:160px">Del mensaje del cliente a la respuesta</h1>
+  <div class="fila">
+    <div><div class="chip e1">WhatsApp<small>el cliente escribe</small></div><div class="chip e2">Correo<small>el cliente escribe</small></div></div>
+    <div class="flecha f1"></div>
+    <div class="chip e3" style="border-color:#00A3E0">Contacto<small>Nexarm lo registra</small></div>
+    <div class="flecha f2"></div>
+    <div>
+      <div class="ag e4">Prospección<small>anota quién es y qué pide</small></div>
+      <div class="ag e5">Calificación<small>puntaje de 0 a 100</small></div>
+      <div class="ag e6">Seguimiento<small>redacta la respuesta</small></div>
+    </div>
+    <div class="flecha f3"></div>
+    <div class="tu e7">Tú apruebas<small>y el mensaje sale</small></div>
+  </div>
+</section>
+
+<section class="s" id="consola">
+  <div id="ventana">
+    <div id="tira"><i></i><i></i><i></i><span>nexarm · consola de supervisión</span></div>
+    <div id="vista"><div id="pagina"><img src="img/consola.png" alt=""></div></div>
+  </div>
+  <div class="pan" id="p1"><p class="mono">// 01 · Panel</p><h2>Lo que hicieron los agentes</h2><ul>
+    <li>Acciones de la semana</li><li>Tiempo de respuesta</li><li>Mensajes recibidos y enviados</li></ul></div>
+  <div class="pan" id="p2"><p class="mono">// 02 · Calificación</p><h2>Puntaje de 0 a 100</h2><ul>
+    <li>Con el motivo por escrito</li><li>Sabes a quién atender primero</li><li>Tratos por etapa</li></ul></div>
+  <div class="pan" id="p3"><p class="mono">// 03 · Aprobación</p><h2>Nada sale sin tu permiso</h2><ul>
+    <li>El agente redacta</li><li>Tú lo lees</li><li>Apruebas o rechazas</li></ul></div>
+  <div class="pan" id="p4"><p class="mono">// 04 · Agentes</p><h2>Cada agente, su credencial</h2><ul>
+    <li>Rol propio</li><li>Suspender con un clic</li><li>Un botón detiene a todos</li></ul></div>
+  <div class="pan" id="p5"><p class="mono">// 05 · Políticas</p><h2>Las reglas las pones tú</h2><ul>
+    <li>Mensajes por día</li><li>Ritmo de trabajo</li><li>Tratos que piden aprobación</li></ul></div>
+  <div class="pan" id="p6"><p class="mono">// 06 · Auditoría</p><h2>Todo queda registrado</h2><ul>
+    <li>Quién hizo qué, y cuándo</li><li>La cadena delata cambios</li><li>Revertir lo que hizo un agente</li></ul></div>
+</section>
+
+<section class="s" id="abierto">
+  <p class="mono" style="position:absolute;left:90px;top:120px">// Abierto</p>
+  <h1 style="position:absolute;left:90px;top:160px">Cualquier agente se conecta</h1>
+  <div class="fila">
+    <div><div class="chip a1">Claude<small>credencial propia</small></div><div class="chip a2">OpenAI<small>credencial propia</small></div><div class="chip a3">Tu agente<small>credencial propia</small></div></div>
+    <div class="flecha g1"></div>
+    <div class="mcp a4">MCP</div>
+    <div class="flecha g2"></div>
+    <div class="card pas a5"><b>Pasarela de gobierno</b><span>Políticas</span><span>Aprobación humana</span><span>Libro de auditoría</span></div>
+    <div class="flecha g3"></div>
+    <div class="crm a6">CRM</div>
+  </div>
+</section>
+
+<section class="s" id="cierre"><div class="centro">
+  <svg viewBox="0 0 640 640" width="210" height="210" id="iso2"></svg>
+  <div class="logo" style="font-size:150px;margin-top:16px">NEX<span class="arm">ARM</span></div>
+  <p class="lema" id="lema2">Los agentes operan. <span class="arm">Tú supervisas.</span></p>
+  <p class="pie" id="pie2">Agentes que venden, con gobernanza diseñada conforme a<br>ISO 9001 · ISO/IEC 27001 · ISO/IEC 42001<br>neona.tech</p>
+</div></section>
+
+<div id="marca"><svg viewBox="0 0 640 640" width="44" height="44" id="iso0"></svg>NEX<span class="arm" style="margin-left:-16px">ARM</span></div>
+<div id="barra"></div>
+
+<script>
+const ISO=n=>'<mask id="'+n+'" maskUnits="userSpaceOnUse" x="0" y="0" width="640" height="640"><rect width="640" height="640" fill="#fff"/><rect x="299" y="170" width="42" height="300" fill="#000" transform="rotate(-52 320 320)"/></mask><polygon fill="#fff" mask="url(#'+n+')" points="272,50 320,20 368,50 368,590 320,620 272,590"/><polygon fill="#fff" points="193.8,302.6 58.7,224.6 56.7,168 106.7,141.4 241.8,219.4 243.8,276"/><polygon fill="#00A3E0" points="398.2,219.4 533.3,141.4 583.3,168 581.3,224.6 446.2,302.6 396.2,276"/><polygon fill="#00A3E0" points="241.8,420.6 106.7,498.6 56.7,472 58.7,415.4 193.8,337.4 243.8,364"/><polygon fill="#fff" points="446.2,337.4 581.3,415.4 583.3,472 533.3,498.6 398.2,420.6 396.2,364"/>';
+iso0.innerHTML=ISO('m0'); iso1.innerHTML=ISO('m1'); iso2.innerHTML=ISO('m2');
+
+// Inicio de cada escena: intro, entrada, panel, puntaje, aprobar, agentes, politicas, libro, abierto, cierre, fin.
+const S=[0,9.5,22.4,34.3,47.7,57.2,68.5,78.8,93.4,102.4,118.9];
+const K=1160/962, X0=151;                       // escala y borde izquierdo de la consola capturada
+const CAM=[[22.4,62],[34.3,62],[35.2,150],[47.7,150],[48.6,850],[57.2,850],[58.1,1285],[64.4,1285],[65.3,700],[68.5,700],[69.4,1840],[78.8,1840],[79.7,2125],[88.9,2125],[89.8,2420]];
+// Focos sobre la captura: [desde, hasta, x, y, ancho, alto] en pixeles de la pagina.
+const FOCOS=[
+ [27.4,29.1,186,176,219,117],[29.1,30.9,416,176,219,117],[30.9,34.1,876,176,219,117],
+ [35.4,42.4,164,303,938,206],[42.7,47.5,164,510,938,226],
+ [49.0,53.4,160,938,944,322],[53.5,57.0,925,1200,178,48],
+ [58.3,61.2,158,1362,948,468],[61.4,64.2,912,1372,104,458],[65.6,68.3,176,789,208,46],
+ [70.6,73.1,158,2025,948,34],[73.2,75.1,158,1990,948,34],[75.2,78.6,158,2061,948,34],
+ [80.0,83.5,158,2243,948,300],[83.8,88.8,160,2186,340,32],[90.1,93.2,1030,2655,84,42],
+];
+// Cuando aparece cada punto de la lista del panel derecho.
+const PUNTOS=[[23.4,27.6,30.9],[35.4,39.5,42.9],[51.0,52.9,54.3],[58.3,61.6,65.4],[70.6,73.2,75.3],[80.0,84.0,90.0]];
+const focos=FOCOS.map(f=>{const d=document.createElement('div');d.className='foco';
+  d.style.cssText='left:'+f[2]*K+'px;top:'+f[3]*K+'px;width:'+f[4]*K+'px;height:'+f[5]*K+'px';pagina.appendChild(d);return d});
+
+const p=(t,s,d)=>Math.min(1,Math.max(0,(t-s)/d));
+const eo=x=>1-Math.pow(1-x,3);
+const eio=x=>x<.5?4*x*x*x:1-Math.pow(-2*x+2,3)/2;
+const $=q=>document.querySelector(q);
+const entra=(el,a,dy=36)=>{el.style.opacity=a.toFixed(3);el.style.transform='translateY('+(dy*(1-a)).toFixed(1)+'px)'};
+const crece=(el,a)=>{el.style.transform='scaleX('+a.toFixed(3)+')'};
+const vis=(el,a,b,t)=>{el.style.opacity=(t>=a&&t<b?Math.min(p(t,a,0.4),1-p(t,b-0.35,0.35)):0).toFixed(3)};
+
+function render(t){
+  bg.style.transform='scale('+(1.04+t*0.0012).toFixed(4)+')';
+  barra.style.width=(1920*t/S[10]).toFixed(1)+'px';
+  vis(intro,S[0],S[1],t); vis(entrada,S[1],S[2],t); vis(consola,S[2],S[8],t); vis(abierto,S[8],S[9],t);
+  cierre.style.opacity=p(t,S[9],0.5).toFixed(3);
+  marca.style.opacity=(t>=S[1]&&t<S[9]?Math.min(p(t,S[1],0.5),1-p(t,S[9]-0.4,0.4)):0).toFixed(3);
+
+  let u=t-S[0];
+  iso1.style.opacity=eo(p(u,0.2,0.7)).toFixed(3);
+  iso1.style.transform='rotate('+(-90*(1-eo(p(u,0.2,1.3)))).toFixed(1)+'deg) scale('+(0.6+0.4*eo(p(u,0.2,1))).toFixed(3)+')';
+  entra(nex,eo(p(u,0.7,0.5)),50); entra(armt,eo(p(u,1.1,0.5)),50);
+  entra(lema1,eo(p(u,2.4,0.6))); entra(lema1b,eo(p(u,6.6,0.6)));
+
+  u=t-S[1];
+  entra($('.e1'),eo(p(u,1.6,0.5))); entra($('.e2'),eo(p(u,2.6,0.5)));
+  crece($('.f1'),eo(p(u,3.6,0.5))); entra($('.e3'),eo(p(u,4.0,0.5)));
+  crece($('.f2'),eo(p(u,6.4,0.5)));
+  entra($('.e4'),eo(p(u,8.6,0.45))); entra($('.e5'),eo(p(u,9.7,0.45))); entra($('.e6'),eo(p(u,10.7,0.45)));
+  crece($('.f3'),eo(p(u,11.5,0.4))); entra($('.e7'),eo(p(u,11.8,0.4)));
+
+  let y=CAM[0][1];
+  for(let i=1;i<CAM.length;i++) if(t>=CAM[i-1][0]) y=CAM[i-1][1]+(CAM[i][1]-CAM[i-1][1])*eio(p(t,CAM[i-1][0],CAM[i][0]-CAM[i-1][0]));
+  if(t>=89.8) y=2420+Math.min(60,(t-89.8)*14);
+  pagina.style.transform='translate('+(-X0*K).toFixed(1)+'px,'+(-y*K).toFixed(1)+'px)';
+  FOCOS.forEach((f,i)=>{focos[i].style.opacity=(t>=f[0]&&t<f[1]?Math.min(p(t,f[0],0.3),1-p(t,f[1]-0.25,0.25)):0).toFixed(3)});
+  for(let i=0;i<6;i++){
+    const el=document.getElementById('p'+(i+1));
+    vis(el,S[2+i],S[3+i],t);
+    [...el.querySelectorAll('li')].forEach((li,j)=>entra(li,eo(p(t,PUNTOS[i][j],0.45)),18));
+  }
+
+  u=t-S[8];
+  entra($('.a1'),eo(p(u,1.2,0.45))); entra($('.a2'),eo(p(u,1.7,0.45))); entra($('.a3'),eo(p(u,2.2,0.45)));
+  crece($('.g1'),eo(p(u,3.0,0.5))); entra($('.a4'),eo(p(u,5.6,0.5)),0);
+  $('.a4').style.transform='scale('+(0.7+0.3*eo(p(u,5.6,0.6))).toFixed(3)+')';
+  crece($('.g2'),eo(p(u,3.6,0.5))); entra($('.a5'),eo(p(u,4.0,0.5)));
+  crece($('.g3'),eo(p(u,4.6,0.5))); entra($('.a6'),eo(p(u,5.0,0.5)));
+
+  u=t-S[9];
+  iso2.style.transform='scale('+(0.7+0.3*eo(p(u,0.2,0.9))).toFixed(3)+')';
+  entra(pie2,eo(p(u,2.6,0.7))); entra(lema2,eo(p(u,10.8,0.7)));
+}
+window.render=render; render(0);
+</script></body></html>

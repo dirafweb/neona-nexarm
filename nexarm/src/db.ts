@@ -1,17 +1,66 @@
-import { PGlite, type Transaction } from "@electric-sql/pglite";
 import { mkdirSync, readFileSync } from "node:fs";
 
-export type Db = PGlite;
-export type Tx = Transaction;
+/** Lo que el codigo usa de una conexion: igual en PGlite (archivo local) y en Postgres servidor. */
+export interface Tx {
+  query<T = Record<string, unknown>>(sql: string, params?: unknown[]): Promise<{ rows: T[] }>;
+  exec(sql: string): Promise<unknown>;
+}
 
-const schema = readFileSync(new URL("./schema.sql", import.meta.url), "utf8");
+export interface Db extends Tx {
+  transaction<T>(fn: (tx: Tx) => Promise<T>): Promise<T>;
+  close(): Promise<void>;
+}
 
-/** Abre la base (carpeta en disco, o en memoria si no se da ruta) y aplica el esquema. */
-export async function openDb(dataDir?: string): Promise<Db> {
-  if (dataDir) mkdirSync(dataDir, { recursive: true });
-  const db = new PGlite(dataDir);
-  await db.exec(schema);
+const schema = () => readFileSync(new URL("./schema.sql", import.meta.url), "utf8");
+
+/** Postgres servidor (Neon en Vercel). Los enteros largos llegan como numero, igual que en PGlite. */
+async function openPostgres(url: string, migrate: boolean): Promise<Db> {
+  const pg = (await import("pg")).default;
+  pg.types.setTypeParser(20, (v) => { const n = BigInt(v); return Number.isSafeInteger(Number(n)) ? Number(n) : n; });
+  const pool = new pg.Pool({ connectionString: url, max: Number(process.env.NEXARM_PG_MAX ?? 5), idleTimeoutMillis: 10_000 });
+  pool.on("error", (err) => console.error(`Postgres: conexion inactiva con error: ${err.message}`));
+  const db: Db = {
+    query: async (sql, params) => ({ rows: (await pool.query(sql, params)).rows }),
+    exec: (sql) => pool.query(sql),
+    close: () => pool.end(),
+    async transaction(fn) {
+      const client = await pool.connect();
+      try {
+        await client.query("begin");
+        const out = await fn({
+          query: async (sql, params) => ({ rows: (await client.query(sql, params)).rows }),
+          exec: (sql) => client.query(sql),
+        });
+        await client.query("commit");
+        return out;
+      } catch (err) {
+        await client.query("rollback").catch(() => undefined);
+        throw err;
+      } finally {
+        client.release();
+      }
+    },
+  };
+  if (migrate) {
+    await db.exec(schema());
+    // Quien crea un rol en Postgres servidor no puede asumirlo hasta darse esa membresia.
+    await db.exec("grant nexarm_app to current_user");
+  }
   return db;
+}
+
+/**
+ * Abre la base y aplica el esquema. Con DATABASE_URL es un Postgres servidor: el esquema solo se aplica con
+ * migrate, para que cada arranque en la nube no lo reescriba. Sin ella es PGlite: carpeta en disco, o memoria.
+ */
+export async function openDb(dataDir?: string, opts: { url?: string; migrate?: boolean } = {}): Promise<Db> {
+  const url = opts.url ?? (dataDir ? undefined : process.env.DATABASE_URL);
+  if (url) return openPostgres(url, opts.migrate ?? false);
+  if (dataDir) mkdirSync(dataDir, { recursive: true });
+  const { PGlite } = await import("@electric-sql/pglite");
+  const db = new PGlite(dataDir);
+  await db.exec(schema());
+  return db as unknown as Db;
 }
 
 /** Ejecuta fn dentro de una transaccion que solo ve las filas de ese cliente. */

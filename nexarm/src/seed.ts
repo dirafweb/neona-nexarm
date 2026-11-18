@@ -93,8 +93,10 @@ export async function seed(db: Db, tenantName = "Nexarm", userName = "Eathan Jim
 }
 
 if (import.meta.url === pathToFileURL(process.argv[1] ?? "").href) {
-  const file = ".tokens.local.json";
-  const db = await openDb(process.env.NEXARM_DATA ?? "./data/pg");
+  // Con DATABASE_URL siembra el Postgres de la nube y guarda sus credenciales aparte de las locales.
+  const cloud = process.env.DATABASE_URL;
+  const file = process.env.NEXARM_TOKENS_FILE ?? (cloud ? ".tokens.produccion.local.json" : ".tokens.local.json");
+  const db = cloud ? await openDb(undefined, { url: cloud, migrate: true }) : await openDb(process.env.NEXARM_DATA ?? "./data/pg");
   const out = await seed(db, undefined, undefined, { ventas: true });
   await db.close();
   const prev: Partial<Seeded> = existsSync(file) ? JSON.parse(readFileSync(file, "utf8")) : {};

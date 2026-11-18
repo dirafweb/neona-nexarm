@@ -33,6 +33,8 @@ function buildMcp(db: Db, agent: Agent, now: () => Date): McpServer {
  */
 export function createApp(db: Db, now: () => Date = () => new Date(), baseUrl = new URL(process.env.NEXARM_URL ?? "http://127.0.0.1:8787")) {
   const app = express();
+  // Detras del proxy de la nube, el protocolo real (https) llega en una cabecera.
+  if (process.env.VERCEL) app.set("trust proxy", 1);
   mountConsole(app, db, now, baseUrl);
   mountChatwoot(app, db, now);
   app.use(express.json({ limit: "1mb" }));
@@ -63,9 +65,21 @@ export function createApp(db: Db, now: () => Date = () => new Date(), baseUrl = 
   return app;
 }
 
-if (import.meta.url === pathToFileURL(process.argv[1] ?? "").href) {
+/**
+ * En Vercel no hay proceso propio: la plataforma importa este archivo y sirve la aplicacion exportada.
+ * La base es el Postgres de DATABASE_URL y la direccion publica sale de NEXARM_URL o del dominio de produccion.
+ */
+const cloud = process.env.VERCEL
+  ? createApp(await openDb(), undefined, new URL(process.env.NEXARM_URL ?? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`))
+  : undefined;
+export default cloud;
+
+if (!process.env.VERCEL && import.meta.url === pathToFileURL(process.argv[1] ?? "").href) {
   const port = Number(process.env.PORT ?? 8787);
-  const db = await openDb(process.env.NEXARM_DATA ?? "./data/pg");
+  // Con DATABASE_URL este equipo usa la misma base que la nube: lo que entra por un lado se ve en el otro.
+  const shared = Boolean(process.env.DATABASE_URL);
+  const db = shared ? await openDb() : await openDb(process.env.NEXARM_DATA ?? "./data/pg");
+  if (shared) console.log("Nexarm: base compartida con la nube (DATABASE_URL)");
   const base = new URL(process.env.NEXARM_URL ?? `http://127.0.0.1:${port}`);
   const app = createApp(db, undefined, base);
   // NEXARM_HOST: direcciones donde escucha, separadas por coma. Sirve para que un Chatwoot en WSL alcance el webhook.
@@ -81,7 +95,7 @@ if (import.meta.url === pathToFileURL(process.argv[1] ?? "").href) {
   // NEXARM_AGENTES_AUTO=1: cada mensaje entrante despierta a los agentes de venta, con las credenciales que dejo pnpm seed.
   let auto: ReturnType<typeof startAuto> | undefined;
   if (process.env.NEXARM_AGENTES_AUTO === "1") {
-    const tokens: Record<string, string> = JSON.parse(readFileSync(".tokens.local.json", "utf8")).tokens ?? {};
+    const tokens: Record<string, string> = JSON.parse(readFileSync(process.env.NEXARM_TOKENS_FILE ?? (shared ? ".tokens.produccion.local.json" : ".tokens.local.json"), "utf8")).tokens ?? {};
     const first = await identify(db, tokens[SALES_AGENTS[0]!.name] ?? "");
     if (first) {
       const mcpUrl = new URL("/mcp", `http://127.0.0.1:${port}`);

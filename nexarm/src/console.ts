@@ -27,7 +27,6 @@ function page(title: string, body: string, human?: Human): string {
 <header><div class="brand">${ISOTIPO}<b>NEXARM</b><p class="tag">// Consola de supervisión</p></div>${session}</header><main>${body}</main>${FOOTER}</body></html>`;
 }
 
-interface PendingConsent { client: OAuthClientInformationFull; params: AuthorizationParams; userId: string; expires: number }
 
 /** Consola de supervision y servidor de autorizacion OAuth. Todo lo que hace una persona aqui queda en el libro. */
 export function mountConsole(app: express.Express, db: Db, now: () => Date, baseUrl: URL): void {
@@ -37,7 +36,6 @@ export function mountConsole(app: express.Express, db: Db, now: () => Date, base
   // Con la cookie SameSite=Strict, exigir el mismo origen cierra las peticiones forjadas desde otro sitio.
   const sameOrigin = (req: express.Request) => req.headers.origin === `${req.protocol}://${req.headers.host}`;
   const safeNext = (next: unknown) => typeof next === "string" && next.startsWith("/authorize?") ? next : "/";
-  const consents = new Map<string, PendingConsent>();
   const isUuid = (v: unknown) => /^[0-9a-f-]{36}$/i.test(String(v));
 
   const oauth = createOAuth(db, now, async (client, params, res) => {
@@ -49,7 +47,9 @@ export function mountConsole(app: express.Express, db: Db, now: () => Date, base
       return;
     }
     const id = randomBytes(16).toString("base64url");
-    consents.set(id, { client, params, userId: human.id, expires: now().getTime() + CONSENT_MINUTES * 60_000 });
+    await db.query("delete from oauth_consents where expires_at <= $1", [now().toISOString()]);
+    await db.query("insert into oauth_consents (id, user_id, client, params, expires_at) values ($1,$2,$3,$4,$5)",
+      [id, human.id, JSON.stringify(client), JSON.stringify(params), new Date(now().getTime() + CONSENT_MINUTES * 60_000).toISOString()]);
     const agents = await withTenant(db, human.tenantId, (tx) =>
       tx.query<{ id: string; name: string; role: string }>("select id, name, role from agents where not suspended order by name"));
     const options = agents.rows.map((a) => `<option value="${esc(a.id)}">${esc(a.name)} (${esc(a.role)})</option>`).join("");
@@ -302,9 +302,11 @@ export function mountConsole(app: express.Express, db: Db, now: () => Date, base
     const human = await guard(req, res);
     if (!human) return;
     const id = String(req.body?.solicitud ?? "");
-    const consent = consents.get(id);
-    consents.delete(id);
-    if (!consent || consent.userId !== human.id || consent.expires <= now().getTime()) {
+    // Borrar y leer en un paso: una solicitud sirve una sola vez.
+    const consent = (await db.query<{ client: OAuthClientInformationFull; params: AuthorizationParams }>(
+      "delete from oauth_consents where id = $1 and user_id = $2 and expires_at > $3 returning client, params",
+      [id, human.id, now().toISOString()])).rows[0];
+    if (!consent) {
       res.status(400).send(page("Solicitud vencida", "<h1>La solicitud venció</h1><p>Vuelve a conectar desde el cliente MCP.</p>", human));
       return;
     }

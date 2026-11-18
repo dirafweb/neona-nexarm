@@ -68,7 +68,9 @@ export async function receiveFromXencrm(db: Db, now: Date, cfg: XencrmConfig, ev
   const number = whatsapp ? /^(?:wa:)?(\d{7,15})@s\.whatsapp\.net$/.exec(contact.id)?.[1] : undefined;
   const jid = number && `+${number}`;
   const phone = contact.phone?.trim() || jid;
-  const mail = [contact.data?.correo, contact.data?.email].find((v): v is string => typeof v === "string" && EMAIL.test(v));
+  // En el chat del sitio la ficha suele estar vacia: sirve el correo que el cliente escribe en el mensaje.
+  const written = /[^\s@<>()",;:]+@[^\s@<>()",;:]+\.[a-z]{2,}/i.exec(String(ev.payload.content ?? ""))?.[0];
+  const mail = [contact.data?.correo, contact.data?.email, written].find((v): v is string => typeof v === "string" && EMAIL.test(v));
   if (!phone && !mail) return { ignored: "el contacto no tiene telefono ni correo en XENCRM" };
 
   const agent = await intakeAgent(db, cfg.tenant, XENCRM_AGENT);
@@ -96,6 +98,7 @@ export function startXencrm(db: Db, now: () => Date = () => new Date(), cfg = xe
     try {
       const out = await receiveFromXencrm(db, now(), cfg, JSON.parse(data));
       if ("outcome" in out && out.outcome !== "ejecutado") console.error(`XENCRM: un mensaje no entro: ${out.reason}`);
+      else if ("ignored" in out && out.ignored.startsWith("el contacto")) console.error(`XENCRM: un mensaje no entro: ${out.ignored}`);
     } catch (err) {
       console.error(`XENCRM: un mensaje no entro: ${(err as Error).message}`);
     }

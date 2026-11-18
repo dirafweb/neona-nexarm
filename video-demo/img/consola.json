@@ -1,0 +1,182 @@
+{
+ "h": 4115,
+ "w": 1265,
+ "s": [
+  {
+   "t": "HEADER.",
+   "x": 0,
+   "y": 0,
+   "w": 1265,
+   "h": 61.25,
+   "txt": "NEXARM\n\n// CONSOLA DE SUPERVISIÓN\n\nEathan Jimenez · supervis"
+  },
+  {
+   "t": "P.tag",
+   "x": 160.828125,
+   "y": 22.21875,
+   "w": 204,
+   "h": 16.796875,
+   "txt": "// CONSOLA DE SUPERVISIÓN"
+  },
+  {
+   "t": "SECTION.arm",
+   "x": 158.5,
+   "y": 77.25,
+   "w": 948,
+   "h": 655.90625,
+   "txt": "// ARM · ÚLTIMOS 7 DÍAS\n\nLos agentes operan. Tú supervisas.\n"
+  },
+  {
+   "t": "P.tag",
+   "x": 178.5,
+   "y": 97.25,
+   "w": 908,
+   "h": 16.796875,
+   "txt": "// ARM · ÚLTIMOS 7 DÍAS"
+  },
+  {
+   "t": "H1.",
+   "x": 178.5,
+   "y": 120.046875,
+   "w": 908,
+   "h": 40.296875,
+   "txt": "Los agentes operan. Tú supervisas."
+  },
+  {
+   "t": "DIV.tiles",
+   "x": 178.5,
+   "y": 176.34375,
+   "w": 908,
+   "h": 116.96875,
+   "txt": "61\nACCIONES DE AGENTES\n90 % de la operación · 7 de personas\n"
+  },
+  {
+   "t": "P.tag",
+   "x": 178.5,
+   "y": 311.3125,
+   "w": 908,
+   "h": 16.796875,
+   "txt": "PROSPECTOS CALIFICADOS"
+  },
+  {
+   "t": "P.tag",
+   "x": 178.5,
+   "y": 518.234375,
+   "w": 908,
+   "h": 16.796875,
+   "txt": "TRATOS POR ETAPA"
+  },
+  {
+   "t": "FORM.row",
+   "x": 173.5,
+   "y": 793.40625,
+   "w": 920,
+   "h": 37.25,
+   "txt": "Detener todos los agentes"
+  },
+  {
+   "t": "P.tag",
+   "x": 158.5,
+   "y": 871.65625,
+   "w": 948,
+   "h": 16.796875,
+   "txt": "// 01 · APROBACIONES"
+  },
+  {
+   "t": "H1.",
+   "x": 158.5,
+   "y": 892.453125,
+   "w": 948,
+   "h": 37.1875,
+   "txt": "Por aprobar (1)"
+  },
+  {
+   "t": "FORM.row",
+   "x": 173.5,
+   "y": 1221.484375,
+   "w": 920,
+   "h": 37.25,
+   "txt": "Aprobar\nRechazar"
+  },
+  {
+   "t": "P.tag",
+   "x": 158.5,
+   "y": 1299.734375,
+   "w": 948,
+   "h": 16.796875,
+   "txt": "// 02 · AGENTES"
+  },
+  {
+   "t": "H2.",
+   "x": 158.5,
+   "y": 1320.53125,
+   "w": 948,
+   "h": 31,
+   "txt": "Agentes"
+  },
+  {
+   "t": "TABLE.",
+   "x": 158.5,
+   "y": 1361.53125,
+   "w": 948,
+   "h": 467.984375,
+   "txt": "AGENTE\tROL\tESTADO\tVENCE\t\nagente-ventas\toperador\tactivo\tsin v"
+  },
+  {
+   "t": "P.tag",
+   "x": 158.5,
+   "y": 1857.515625,
+   "w": 948,
+   "h": 16.796875,
+   "txt": "// 03 · POLÍTICAS"
+  },
+  {
+   "t": "H2.",
+   "x": 158.5,
+   "y": 1878.3125,
+   "w": 948,
+   "h": 31,
+   "txt": "Políticas"
+  },
+  {
+   "t": "TABLE.",
+   "x": 158.5,
+   "y": 1919.3125,
+   "w": 948,
+   "h": 190.234375,
+   "txt": "NOMBRE\tTIPO\tPARÁMETROS\tAGENTE\tHERRAMIENTA\tESTADO\nmensajes-co"
+  },
+  {
+   "t": "P.tag",
+   "x": 158.5,
+   "y": 2137.546875,
+   "w": 948,
+   "h": 16.796875,
+   "txt": "// 04 · AUDITORÍA"
+  },
+  {
+   "t": "H2.",
+   "x": 158.5,
+   "y": 2158.34375,
+   "w": 948,
+   "h": 31,
+   "txt": "Libro de auditoría"
+  },
+  {
+   "t": "TABLE.",
+   "x": 158.5,
+   "y": 2242.59375,
+   "w": 948,
+   "h": 1721.046875,
+   "txt": "#\tCUÁNDO\tQUIÉN\tACCIÓN\tRESULTADO\tMOTIVO\t\n226\t2026-11-16 14:19"
+  },
+  {
+   "t": "P.tag",
+   "x": 158.5,
+   "y": 4028.640625,
+   "w": 948,
+   "h": 16.796875,
+   "txt": "NEXARM · NEONA TECH · EL ORIGEN DE NUEVAS POSIBILIDADES"
+  }
+ ]
+}

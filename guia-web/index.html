@@ -1,0 +1,249 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="description" content="Guía Nexarm: cómo poner agentes de IA a vender sin soltar el control. Simulación, pasos y diagnóstico.">
+<style>*,*::before,*::after{box-sizing:border-box}body{margin:0}</style>
+</head>
+<body>
+<title>Guía Nexarm</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Guia de una columna: el lector primero opera una consola simulada, luego lee los pasos y se mide. */
+:root{
+  --fondo:#f3f5fa; --panel:#ffffff; --hundido:#e9edf6; --tinta:#10162b; --suave:#566080; --linea:#d6dcea;
+  --acento:#1f4fd8; --sobre-acento:#ffffff; --bien:#12805c; --alerta:#a8620a; --mal:#b3261e;
+  --titulo:"Space Grotesk","Segoe UI",system-ui,sans-serif; --texto:"Inter","Segoe UI",system-ui,sans-serif; --dato:"JetBrains Mono",Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --fondo:#0a0e1c; --panel:#121831; --hundido:#0d1226; --tinta:#eef1fa; --suave:#9aa5c4; --linea:#262f52;
+  --acento:#7ea2ff; --sobre-acento:#0a0e1c; --bien:#4fd1a1; --alerta:#f0b45a; --mal:#ff8a80; color-scheme:dark } }
+:root[data-theme="dark"]{
+  --fondo:#0a0e1c; --panel:#121831; --hundido:#0d1226; --tinta:#eef1fa; --suave:#9aa5c4; --linea:#262f52;
+  --acento:#7ea2ff; --sobre-acento:#0a0e1c; --bien:#4fd1a1; --alerta:#f0b45a; --mal:#ff8a80; color-scheme:dark }
+body{background:var(--fondo);color:var(--tinta);font-family:var(--texto);font-size:16px;line-height:1.6}
+.hoja{max-width:860px;margin:0 auto;padding-block:44px 72px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:flex;flex-direction:column;gap:56px}
+section{display:flex;flex-direction:column;gap:18px;min-width:0}
+.ceja{font-size:13px;letter-spacing:.16em;text-transform:uppercase;color:var(--acento);font-weight:600}
+h1{font-family:var(--titulo);font-size:clamp(32px,5.4vw,50px);line-height:1.06;margin:0;text-wrap:balance}
+h2{font-family:var(--titulo);font-size:clamp(24px,3.6vw,32px);line-height:1.15;margin:0;text-wrap:balance}
+h3{font-family:var(--titulo);font-size:19px;line-height:1.25;margin:0}
+p{margin:0;color:var(--suave);max-width:64ch}
+button{font:inherit;cursor:pointer;border-radius:8px;border:1px solid var(--linea);background:var(--panel);color:var(--tinta);padding:10px 16px;font-weight:600}
+button.principal{background:var(--acento);color:var(--sobre-acento);border-color:var(--acento)}
+button.peligro{color:var(--mal)}
+button:focus-visible,input:focus-visible,a:focus-visible,video:focus-visible{outline:3px solid var(--acento);outline-offset:2px}
+a{color:var(--acento)}
+
+/* Simulador */
+.consola{background:var(--panel);border:1px solid var(--linea);border-radius:12px;overflow:hidden}
+.barra{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:10px 16px;border-bottom:1px solid var(--linea);font-size:13px;color:var(--suave)}
+.rotulo{font-family:var(--dato);font-size:12px;border:1px solid var(--linea);border-radius:999px;padding:2px 10px}
+.via{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:4px;padding:16px 16px 0}
+.via span{height:6px;border-radius:3px;background:var(--hundido)}
+.via span.hecho{background:var(--acento)}
+.escena{padding:18px 16px;display:flex;flex-direction:column;gap:12px;min-height:210px}
+.quien{font-family:var(--dato);font-size:12px;color:var(--acento);text-transform:uppercase;letter-spacing:.08em}
+.burbuja{background:var(--hundido);border-radius:10px;padding:12px 14px;color:var(--tinta);max-width:60ch}
+.puntaje{display:flex;align-items:baseline;gap:10px;font-variant-numeric:tabular-nums}
+.puntaje b{font-family:var(--titulo);font-size:44px;line-height:1}
+.acciones{display:flex;gap:10px;flex-wrap:wrap;padding:0 16px 16px}
+.libro{border-top:1px solid var(--linea);background:var(--hundido);padding:12px 16px;font-family:var(--dato);font-size:12.5px;color:var(--suave);overflow-x:auto}
+.libro div{white-space:nowrap;font-variant-numeric:tabular-nums}
+.libro .t{color:var(--tinta)}
+.ok{color:var(--bien)} .no{color:var(--mal)}
+
+/* Comparacion */
+.dos{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.col{border-top:3px solid var(--linea);padding-top:14px;display:flex;flex-direction:column;gap:10px;min-width:0}
+.col.nuestro{border-top-color:var(--acento)}
+.col ul{margin:0;padding-left:18px;color:var(--suave);display:flex;flex-direction:column;gap:6px}
+.col.nuestro ul{color:var(--tinta)}
+
+/* Pasos */
+.pasos{list-style:none;margin:0;padding:0;display:flex;flex-direction:column}
+.pasos li{display:grid;grid-template-columns:52px minmax(0,1fr);gap:16px;padding:20px 0;border-top:1px solid var(--linea)}
+.num{font-family:var(--titulo);font-size:28px;color:var(--acento);font-variant-numeric:tabular-nums;line-height:1.1}
+.pasos li > div{display:flex;flex-direction:column;gap:6px}
+.ej{font-family:var(--dato);font-size:13px;color:var(--tinta);background:var(--hundido);border-radius:8px;padding:8px 12px;overflow-wrap:anywhere}
+
+/* Diagnostico */
+.prueba{display:grid;grid-template-columns:minmax(0,1fr) 220px;gap:24px;align-items:start}
+.lista{display:flex;flex-direction:column}
+.lista label{display:grid;grid-template-columns:22px minmax(0,1fr);gap:12px;padding:12px 0;border-top:1px solid var(--linea);cursor:pointer}
+.lista input{width:20px;height:20px;margin-top:2px;accent-color:var(--acento)}
+.marcador{position:sticky;top:calc(env(safe-area-inset-top,0px) + 16px);background:var(--panel);border:1px solid var(--linea);border-radius:12px;padding:18px;display:flex;flex-direction:column;gap:8px}
+.marcador b{font-family:var(--titulo);font-size:52px;line-height:1;font-variant-numeric:tabular-nums}
+.medidor{height:8px;border-radius:4px;background:var(--hundido);overflow:hidden}
+.medidor i{display:block;height:100%;width:0;background:var(--acento);transition:width .25s}
+#veredicto{color:var(--tinta);font-weight:600}
+video{display:block;width:100%;max-width:100%;aspect-ratio:16/9;background:#03050b;border:1px solid var(--linea);border-radius:10px}
+.cierre{border-top:1px solid var(--linea);padding-top:28px}
+.dir{font-family:var(--dato);color:var(--tinta);user-select:all}
+.nota{font-size:13.5px}
+@media (max-width:680px){ .dos,.prueba{grid-template-columns:1fr} .marcador{position:static} .pasos li{grid-template-columns:38px minmax(0,1fr);gap:12px} }
+@media (prefers-reduced-motion:reduce){ .medidor i{transition:none} }
+</style>
+
+<div class="hoja">
+  <header style="display:flex;flex-direction:column;gap:16px">
+    <div class="ceja">Neona Nexarm · Guía práctica · 6 pasos</div>
+    <h1>Pon agentes de IA a vender sin soltar el control</h1>
+    <p>Un agente que responde solo es fácil de montar. Lo difícil es saber qué dijo, a quién, y poder frenarlo. Esta guía te lleva de cero a un equipo de agentes que atiende, califica y redacta, mientras cada mensaje pasa por ti antes de salir.</p>
+  </header>
+
+  <section aria-labelledby="t-sim">
+    <div class="ceja">Pruébalo ahora</div>
+    <h2 id="t-sim">Sigue un mensaje de punta a punta</h2>
+    <p>Así trabaja Nexarm con un cliente que escribe. Avanza y decide tú la aprobación.</p>
+    <div class="consola">
+      <div class="barra"><span>Consola de Nexarm</span><span class="rotulo">Simulación con datos de ejemplo</span></div>
+      <div class="via" id="via" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span></div>
+      <div class="escena" id="escena" aria-live="polite"></div>
+      <div class="acciones" id="acciones"></div>
+      <div class="libro" id="libro" aria-label="Libro de auditoría"></div>
+    </div>
+  </section>
+
+  <section aria-labelledby="t-comp">
+    <div class="ceja">La diferencia</div>
+    <h2 id="t-comp">Un agente suelto y un agente gobernado no son lo mismo</h2>
+    <div class="dos">
+      <div class="col">
+        <h3>Agente suelto</h3>
+        <ul>
+          <li>Responde al cliente sin que nadie lea antes.</li>
+          <li>Comparte una sola clave con todo el sistema.</li>
+          <li>Si se equivoca, te enteras por el cliente.</li>
+          <li>No hay registro confiable de lo que hizo.</li>
+        </ul>
+      </div>
+      <div class="col nuestro">
+        <h3>Agente en Nexarm</h3>
+        <ul>
+          <li>Redacta; una persona aprueba o rechaza.</li>
+          <li>Tiene credencial y rol propios.</li>
+          <li>Se suspende con un clic, o todos a la vez.</li>
+          <li>Cada acción queda en un libro encadenado y se puede revertir.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section aria-labelledby="t-pasos">
+    <div class="ceja">La guía</div>
+    <h2 id="t-pasos">Tu equipo de agentes en 6 pasos</h2>
+    <ol class="pasos">
+      <li><div class="num">01</div><div><h3>Conecta por dónde te escriben</h3><p>WhatsApp y correo entran al mismo lugar. Cada persona nueva queda como contacto sin que nadie la digite.</p><div class="ej">WhatsApp + correo → un solo historial por contacto</div></div></li>
+      <li><div class="num">02</div><div><h3>Escribe qué es un buen prospecto</h3><p>Define los criterios con tus palabras. El agente de calificación da un puntaje de 0 a 100 y deja el motivo por escrito.</p><div class="ej">82 / 100 · "Pide demo esta semana y decide la compra"</div></div></li>
+      <li><div class="num">03</div><div><h3>Da a cada agente su credencial y su rol</h3><p>Prospección, calificación y seguimiento trabajan con permisos separados. Ninguno puede hacer más de lo que su rol permite.</p><div class="ej">seguimiento: puede redactar · no puede enviar sin aprobación</div></div></li>
+      <li><div class="num">04</div><div><h3>Pon las reglas antes de encender</h3><p>Cuántos mensajes al día, a qué ritmo, y desde qué monto un trato necesita tu visto bueno.</p><div class="ej">máx. mensajes por día · tratos grandes → aprobación</div></div></li>
+      <li><div class="num">05</div><div><h3>Aprueba desde la consola</h3><p>El agente deja el borrador listo. Tú lo lees y decides. Nada sale hacia el cliente sin ese paso.</p><div class="ej">Pendiente → Aprobar · Rechazar con nota</div></div></li>
+      <li><div class="num">06</div><div><h3>Revisa el libro y corrige</h3><p>Quién hizo qué y cuándo. Las entradas van encadenadas: si alguien altera una, la cadena lo muestra. Lo que hizo un agente se puede revertir.</p><div class="ej">auditoría → ver entrada → revertir</div></div></li>
+    </ol>
+  </section>
+
+  <section aria-labelledby="t-diag">
+    <div class="ceja">Mídete</div>
+    <h2 id="t-diag">¿Qué tan listo está tu negocio?</h2>
+    <p>Marca lo que hoy ya se cumple. El resultado se calcula al instante y queda guardado en este navegador.</p>
+    <div class="prueba">
+      <div class="lista" id="lista">
+        <label><input type="checkbox" id="d1"><span>Los mensajes de todos los canales llegan a un solo historial por cliente.</span></label>
+        <label><input type="checkbox" id="d2"><span>Tengo escrito qué hace que un prospecto sea bueno.</span></label>
+        <label><input type="checkbox" id="d3"><span>Un cliente nuevo recibe atención en minutos, a cualquier hora.</span></label>
+        <label><input type="checkbox" id="d4"><span>Sé a quién atender primero sin leer todas las conversaciones.</span></label>
+        <label><input type="checkbox" id="d5"><span>Una persona lee lo que la IA va a enviar antes de que salga.</span></label>
+        <label><input type="checkbox" id="d6"><span>Cada agente o automatización tiene su propia credencial.</span></label>
+        <label><input type="checkbox" id="d7"><span>Puedo detener todas las automatizaciones en menos de un minuto.</span></label>
+        <label><input type="checkbox" id="d8"><span>Puedo demostrar qué hizo la IA con un cliente y deshacerlo.</span></label>
+      </div>
+      <div class="marcador">
+        <div><b id="pts">0</b> <span style="color:var(--suave)">de 8</span></div>
+        <div class="medidor"><i id="barra"></i></div>
+        <div id="veredicto">Marca lo que ya cumples.</div>
+        <p class="nota" id="consejo">Las cuatro últimas son las de control: sin ellas, automatizar aumenta el riesgo.</p>
+      </div>
+    </div>
+  </section>
+
+  <section aria-labelledby="t-video">
+    <div class="ceja">Míralo funcionar</div>
+    <h2 id="t-video">La consola real en 2 minutos</h2>
+    <video id="video-demo" controls preload="metadata" playsinline poster="demo.jpg" src="demo.mp4"></video>
+    <p class="nota">Los contactos que aparecen son de prueba.</p>
+  </section>
+
+  <section class="cierre" aria-labelledby="t-fin">
+    <h2 id="t-fin">Lo montamos contigo</h2>
+    <p>Cuéntanos por dónde te escriben tus clientes y qué resultado obtuviste arriba. Te mostramos Nexarm funcionando con tu caso.</p>
+    <p>Escríbenos desde <a href="https://neona.tech" target="_blank" rel="noopener">neona.tech</a> · <span class="dir">neona.tech</span></p>
+    <p class="nota">Nexarm es abierto: cualquier agente se conecta con su propia credencial por el protocolo MCP. Gobernanza diseñada conforme a ISO 9001, ISO 27001 e ISO 42001.</p>
+  </section>
+</div>
+
+<script>
+(function(){
+  var escena=document.getElementById('escena'), acciones=document.getElementById('acciones'),
+      libro=document.getElementById('libro'), via=document.getElementById('via').children;
+  var paso=0, cadena='0000', hora=[9,41,12];
+  function sello(){ hora[2]+=7; if(hora[2]>59){hora[2]-=60;hora[1]++;} return hora.map(function(n){return String(n).padStart(2,'0')}).join(':'); }
+  function huella(txt){ var h=0,s=cadena+txt; for(var i=0;i<s.length;i++){h=(h*31+s.charCodeAt(i))>>>0;} return ('000'+(h%65536).toString(16)).slice(-4); }
+  function anotar(quien,que,clase){
+    var nueva=huella(que), d=document.createElement('div');
+    d.innerHTML='<span class="t">'+sello()+'</span>  '+quien.padEnd(13,' ').replace(/ /g,'&nbsp;')+' <span class="'+(clase||'t')+'">'+que+'</span>  ['+cadena+' → '+nueva+']';
+    cadena=nueva; libro.appendChild(d); libro.scrollTop=libro.scrollHeight;
+  }
+  function boton(txt,clase,fn){ var b=document.createElement('button'); b.type='button'; b.textContent=txt; if(clase)b.className=clase; b.addEventListener('click',fn); acciones.appendChild(b); return b; }
+  var P=[
+    {q:'Cliente · WhatsApp', h:'<div class="burbuja">Hola, tenemos 12 vendedores y se nos pierden clientes en el chat. ¿Podemos ver una demo esta semana?</div>', log:['sistema','mensaje recibido · contacto creado: Laura Gómez']},
+    {q:'Agente de prospección', h:'<p>Leyó el historial y dejó una nota en el contacto.</p><div class="burbuja">Empresa con 12 vendedores. Dolor: clientes sin atender en chat. Pide demo esta semana.</div>', log:['prospeccion','nota registrada en el contacto']},
+    {q:'Agente de calificación', h:'<div class="puntaje"><b>86</b><span>de 100</span></div><p>Motivo: equipo comercial grande, necesidad concreta y fecha cercana.</p>', log:['calificacion','puntaje 86 · motivo escrito']},
+    {q:'Agente de seguimiento · borrador', h:'<div class="burbuja">Hola Laura, con gusto. Tengo espacio el jueves a las 10:00. ¿Te funciona? Te muestro cómo se atiende cada chat sin que se pierda ninguno.</div><p>Este mensaje está detenido. Falta tu decisión.</p>', log:['seguimiento','borrador creado · pendiente de aprobación'], decide:true}
+  ];
+  function pintar(){
+    for(var i=0;i<via.length;i++) via[i].className=i<=paso?'hecho':'';
+    acciones.innerHTML='';
+    var p=P[paso];
+    escena.innerHTML='<div class="quien">'+p.q+'</div>'+p.h;
+    anotar(p.log[0],p.log[1]);
+    if(p.decide){
+      boton('Aprobar','principal',function(){fin(true)});
+      boton('Rechazar','peligro',function(){fin(false)});
+    } else boton('Siguiente','principal',function(){paso++;pintar()});
+  }
+  function fin(ok){
+    paso=5; for(var i=0;i<via.length;i++) via[i].className='hecho';
+    acciones.innerHTML='';
+    if(ok){
+      anotar('supervisor','APROBADO por una persona','ok'); anotar('sistema','mensaje enviado por WhatsApp','ok');
+      escena.innerHTML='<div class="quien">Resultado</div><p class="ok" style="font-weight:600">Mensaje enviado a Laura.</p><p>Salió porque tú lo aprobaste. Abajo quedó quién lo redactó, quién lo aprobó y a qué hora.</p>';
+    } else {
+      anotar('supervisor','RECHAZADO por una persona','no');
+      escena.innerHTML='<div class="quien">Resultado</div><p class="no" style="font-weight:600">El mensaje no salió.</p><p>El cliente no recibió nada. El rechazo quedó registrado y el agente puede redactar otra versión.</p>';
+    }
+    boton('Repetir','',function(){paso=0;cadena='0000';hora=[9,41,12];libro.innerHTML='';pintar()});
+  }
+  pintar();
+
+  var cajas=[].slice.call(document.querySelectorAll('#lista input')), CLAVE='guia-nexarm-diag';
+  var pts=document.getElementById('pts'), barra=document.getElementById('barra'), ver=document.getElementById('veredicto'), con=document.getElementById('consejo');
+  function medir(){
+    var n=cajas.filter(function(c){return c.checked}).length, control=cajas.slice(4).filter(function(c){return c.checked}).length;
+    pts.textContent=n; barra.style.width=(n/8*100)+'%';
+    if(n===0){ver.textContent='Marca lo que ya cumples.';con.textContent='Las cuatro últimas son las de control: sin ellas, automatizar aumenta el riesgo.';}
+    else if(n<=3){ver.textContent='Punto de partida.';con.textContent='Empieza por los pasos 1 y 2: un solo historial y criterios escritos.';}
+    else if(control<3){ver.textContent='Atiendes bien; falta control.';con.textContent='Tu siguiente avance está en los pasos 3 a 6: credenciales, reglas, aprobación y auditoría.';}
+    else if(n<8){ver.textContent='Casi listo.';con.textContent='Cierra lo que falta y tendrás agentes que venden con supervisión completa.';}
+    else {ver.textContent='Listo para operar con agentes.';con.textContent='Cumples todo. El siguiente paso es sumar más agentes con las mismas reglas.';}
+    try{localStorage.setItem(CLAVE,JSON.stringify(cajas.map(function(c){return c.checked})))}catch(e){}
+  }
+  try{var g=JSON.parse(localStorage.getItem(CLAVE)||'null'); if(g)cajas.forEach(function(c,i){c.checked=!!g[i]});}catch(e){}
+  cajas.forEach(function(c){c.addEventListener('change',medir)}); medir();
+})();
+</script>
+
+</body>
+</html>

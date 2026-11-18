@@ -17,3 +17,5 @@ benchmark-sendpulse/*.cany
 # cuadros del video: se regeneran con video-arm/grabar.py
 video-arm/cuadros*/
 __pycache__/
+video-demo/cuadros*/
+video-demo/prueba/
