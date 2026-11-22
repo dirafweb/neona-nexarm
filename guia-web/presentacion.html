@@ -241,7 +241,7 @@ dialog form button{font:600 14px var(--plex);padding:10px 14px;border-radius:99p
 
 <section class="block alt" id="consola">
   <div class="wrap">
-    <div class="head rv"><p class="tag">// 06 · La consola</p><h2>Lo que ve la persona que supervisa.</h2><p class="lead">Capturas de la consola y del tablero del CRM, con datos ficticios.</p></div>
+    <div class="head rv"><p class="tag">// 06 · La consola</p><h2>Lo que ve la persona que supervisa.</h2><p class="lead">Capturas de la consola y del tablero del CRM, con datos ficticios. Los videos arrancan solos y sin sonido; activa el sonido en cada uno.</p></div>
     <div class="rv">
       <div class="tabs" role="tablist" aria-label="Vistas de la consola">
         <button role="tab" aria-selected="true" data-img="inicio" data-alt="Panel de inicio de la consola de Nexarm">Panel</button>
@@ -255,8 +255,8 @@ dialog form button{font:600 14px var(--plex);padding:10px 14px;border-radius:99p
       <div class="marco"><div class="tira"><i></i><i></i><i></i>&nbsp;nexarm · consola de supervisión</div><div class="vista"><img id="vista" src="media/consola-inicio.webp" alt="Panel de inicio de la consola de Nexarm" loading="lazy" width="1600" height="1000"></div></div>
     </div>
     <div class="dosv rv">
-      <video controls preload="none" playsinline poster="demo.jpg" src="demo.mp4" aria-label="La consola de Nexarm en 2 minutos"></video>
-      <video class="vert" controls preload="none" playsinline poster="media/arm-9x16.jpg" src="media/arm-9x16.mp4" aria-label="Nexarm explicado en 43 segundos, formato vertical"></video>
+      <video data-auto controls muted loop preload="metadata" playsinline poster="demo.jpg" src="demo.mp4" aria-label="La consola de Nexarm en 2 minutos"></video>
+      <video data-auto class="vert" controls muted loop preload="metadata" playsinline poster="media/arm-9x16.jpg" src="media/arm-9x16.mp4" aria-label="Nexarm explicado en 43 segundos, formato vertical"></video>
     </div>
   </div>
 </section>
@@ -278,7 +278,7 @@ dialog form button{font:600 14px var(--plex);padding:10px 14px;border-radius:99p
 <section class="block alt" id="barranquilla">
   <div class="wrap">
     <div class="ciudad rv">
-      <video autoplay muted loop playsinline poster="media/barranquilla.jpg" src="media/barranquilla.mp4" aria-hidden="true"></video>
+      <video data-auto muted loop playsinline preload="metadata" poster="media/barranquilla.jpg" src="media/barranquilla.mp4" aria-hidden="true"></video>
       <div class="velo"></div>
       <div class="txt"><p class="tag">// 08 · De dónde viene</p><h2>Hecho en Barranquilla.</h2><p class="lead">Neona Tech trabaja desde la Cra. 52 No. 79-19, en Barranquilla, Atlántico.</p><small>Video ilustrativo generado con IA.</small></div>
     </div>
@@ -288,7 +288,7 @@ dialog form button{font:600 14px var(--plex);padding:10px 14px;border-radius:99p
 <section class="block" id="evento">
   <div class="wrap">
     <div class="head rv"><p class="tag">// 09 · El evento</p><h2>Semana T, en Barranquilla.</h2><p class="lead">Del 16 al 21 de noviembre de 2026. Fotos tomadas por el equipo de Neona Tech en el salón principal.</p></div>
-    <video class="rv" controls muted loop playsinline preload="none" poster="media/evento.jpg" src="media/evento.mp4" aria-label="Fotos del escenario de Semana T en Barranquilla"></video>
+    <video data-auto controls muted loop playsinline preload="metadata" poster="media/evento.jpg" src="media/evento.mp4" aria-label="Fotos del escenario de Semana T en Barranquilla"></video>
     <p class="fuente rv" style="margin-top:12px">Semana T es un evento de sus organizadores. Las marcas que aparecen en pantalla pertenecen a sus dueños.</p>
   </div>
 </section>
@@ -395,6 +395,17 @@ dialog form button{font:600 14px var(--plex);padding:10px 14px;border-radius:99p
     [].forEach.call(document.querySelectorAll('.rv'),function(el){io.observe(el)});
   } else { [].forEach.call(document.querySelectorAll('.rv'),function(el){el.classList.add('in')}); }
 
+
+  // los videos arrancan sin sonido al entrar en pantalla y se pausan al salir
+  var vids=[].slice.call(document.querySelectorAll('video[data-auto]'));
+  if('IntersectionObserver' in window && !quieto){
+    var iv=new IntersectionObserver(function(es){es.forEach(function(e){
+      var v=e.target;
+      if(e.isIntersecting){ if(!v.dataset.manual){ v.muted=true; var pr=v.play(); if(pr&&pr.catch)pr.catch(function(){}); } }
+      else { v.pause(); }
+    })},{threshold:.35});
+    vids.forEach(function(v){ iv.observe(v); });
+  }
 })();
 </script>
 </body>
