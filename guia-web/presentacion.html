@@ -1,0 +1,401 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Nexarm: agentes de IA que venden, personas que deciden</title>
+<meta name="description" content="Presentación de Nexarm, el CRM de Neona Tech operado por agentes de IA a través de MCP. Cada acción pasa por una pasarela de gobernanza de siete pasos y queda en un libro de auditoría. Hecho en Barranquilla, Colombia.">
+<link rel="canonical" href="https://guia-nexarm.vercel.app/presentacion">
+<meta name="robots" content="index, follow, max-image-preview:large">
+<meta name="theme-color" content="#071b3f">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="es_CO">
+<meta property="og:title" content="Nexarm: agentes de IA que venden, personas que deciden">
+<meta property="og:description" content="CRM operado por agentes de IA bajo reglas. Siete pasos por cada acción y un libro de auditoría. Un producto de Neona Tech, Barranquilla.">
+<meta property="og:url" content="https://guia-nexarm.vercel.app/presentacion">
+<meta property="og:image" content="https://guia-nexarm.vercel.app/demo.jpg">
+<link rel="icon" href="marca/isotipo-azul.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Sora:wght@600;700;800&display=swap">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@graph":[
+ {"@type":"Organization","@id":"https://neona.tech/#org","name":"Neona Tech","legalName":"NEONATECH E-BUSINESS S.A.S.","taxID":"902.118.619-9","url":"https://neona.tech","email":"gerencia@neona.tech","telephone":"+57 605 322 5918","address":{"@type":"PostalAddress","streetAddress":"Cra. 52 No. 79-19, Piso 3, Oficina 19","addressLocality":"Barranquilla","addressRegion":"Atlántico","addressCountry":"CO"}},
+ {"@type":"SoftwareApplication","name":"Nexarm","applicationCategory":"BusinessApplication","operatingSystem":"Web","description":"CRM operado por agentes de IA a través de MCP, con pasarela de gobernanza de siete pasos, aprobación humana y libro de auditoría encadenado con hash.","publisher":{"@id":"https://neona.tech/#org"},"url":"https://guia-nexarm.vercel.app/presentacion"},
+ {"@type":"VideoObject","name":"La consola de Nexarm en 2 minutos","description":"Recorrido por la consola de supervisión de Nexarm: panel, aprobaciones y libro de auditoría.","thumbnailUrl":"https://guia-nexarm.vercel.app/demo.jpg","contentUrl":"https://guia-nexarm.vercel.app/demo.mp4","uploadDate":"2026-11-20","duration":"PT1M58S"}
+]}
+</script>
+<style>
+:root{
+  --noche:#04122b; --azul:#0A2A5E; --azul2:#071b3f; --antra:#2E3440; --cian:#00A3E0; --verde:#00B386; --ambar:#F5B700;
+  --txt:#e8eefb; --muted:#9fb1d6; --line:rgba(159,177,214,.18); --card:rgba(10,42,94,.42);
+  --sora:"Sora",system-ui,sans-serif; --plex:"IBM Plex Sans",system-ui,sans-serif; --mono:"IBM Plex Mono",ui-monospace,monospace;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:72px}
+body{margin:0;background:var(--noche);color:var(--txt);font:17px/1.6 var(--plex);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+img,video{max-width:100%;height:auto;display:block}
+a{color:inherit}
+h1,h2,h3{font-family:var(--sora);line-height:1.08;margin:0;letter-spacing:-.02em;text-wrap:balance}
+h1{font-size:clamp(40px,8.4vw,104px);font-weight:800}
+h2{font-size:clamp(30px,5.2vw,60px);font-weight:700}
+h3{font-size:20px;font-weight:600;letter-spacing:-.01em}
+p{margin:0}
+.tag{font-family:var(--mono);font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--cian)}
+.lead{font-size:clamp(18px,2.2vw,23px);color:#c9d5ee;max-width:62ch}
+.wrap{width:min(1180px,100%);margin:0 auto;padding:0 20px}
+section.block{padding:clamp(72px,11vw,150px) 0;position:relative}
+section.alt{background:linear-gradient(180deg,var(--azul2),var(--noche))}
+.head{display:grid;gap:18px;margin-bottom:clamp(32px,5vw,60px)}
+
+/* barra y menú */
+#prog{position:fixed;inset:0 auto auto 0;height:3px;width:0;background:linear-gradient(90deg,var(--cian),var(--verde));z-index:60}
+header.top{position:fixed;inset:0 0 auto 0;z-index:50;backdrop-filter:blur(14px);background:rgba(4,18,43,.72);border-bottom:1px solid var(--line)}
+header.top .wrap{display:flex;align-items:center;gap:20px;height:60px}
+.logo{display:flex;align-items:center;gap:9px;font-family:var(--sora);font-weight:800;font-size:19px;letter-spacing:.06em;text-decoration:none}
+.logo img{width:26px;height:26px}
+.logo b{color:var(--cian);font-weight:800}
+nav.menu{display:flex;gap:4px;margin-left:auto;overflow-x:auto;scrollbar-width:none}
+nav.menu::-webkit-scrollbar{display:none}
+nav.menu a{font-family:var(--mono);font-size:12.5px;letter-spacing:.06em;text-transform:uppercase;text-decoration:none;color:var(--muted);padding:8px 10px;border-radius:99px;white-space:nowrap}
+nav.menu a.on{color:#fff;background:rgba(0,163,224,.18)}
+@media(max-width:760px){ .logo span{display:none} }
+
+/* hero */
+.hero{min-height:100svh;display:grid;align-items:end;position:relative;padding:110px 0 clamp(40px,8vw,90px);overflow:hidden}
+.hero video,.hero .velo{position:absolute;inset:0;width:100%;height:100%}
+.hero video{object-fit:cover;filter:saturate(1.15) hue-rotate(-6deg)}
+.hero .velo{background:linear-gradient(180deg,rgba(4,18,43,.55) 0%,rgba(4,18,43,.2) 35%,rgba(4,18,43,.92) 88%,var(--noche) 100%),radial-gradient(80% 60% at 20% 80%,rgba(0,163,224,.28),transparent 70%)}
+.hero .wrap{position:relative;display:grid;gap:22px}
+.hero h1 em{font-style:normal;color:var(--cian)}
+.btns{display:flex;flex-wrap:wrap;gap:12px;margin-top:6px}
+.btn{font:600 16px var(--plex);padding:14px 22px;border-radius:12px;border:1px solid var(--line);background:rgba(255,255,255,.06);color:#fff;text-decoration:none;cursor:pointer;display:inline-flex;align-items:center;gap:10px;min-height:48px}
+.btn.p{background:var(--cian);border-color:var(--cian);color:#04122b}
+.btn:hover{transform:translateY(-1px)} .btn:focus-visible,button:focus-visible,a:focus-visible,summary:focus-visible{outline:2px solid var(--cian);outline-offset:3px}
+.origen{font-family:var(--mono);font-size:12.5px;color:var(--muted);letter-spacing:.08em}
+
+/* tarjetas */
+.grid{display:grid;gap:16px}
+.g3{grid-template-columns:repeat(auto-fit,minmax(250px,1fr))}
+.g4{grid-template-columns:repeat(auto-fit,minmax(200px,1fr))}
+.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:26px;display:grid;gap:10px;align-content:start}
+.card p{color:#c9d5ee;font-size:16px}
+.num{font-family:var(--sora);font-weight:800;font-size:clamp(46px,7vw,84px);line-height:1;color:#fff;font-variant-numeric:tabular-nums}
+.num small{font-size:.32em;color:var(--cian);font-weight:600;margin-left:6px}
+.fuente{font-family:var(--mono);font-size:12px;color:var(--muted)}
+
+/* comparación */
+.vs{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.vs ul{margin:8px 0 0;padding:0;list-style:none;display:grid;gap:10px}
+.vs li{padding-left:26px;position:relative;font-size:16px;color:#c9d5ee}
+.vs li::before{content:"";position:absolute;left:0;top:9px;width:12px;height:2px;background:var(--muted)}
+.vs .si{border-color:rgba(0,179,134,.55);background:linear-gradient(160deg,rgba(0,179,134,.16),var(--card))}
+.vs .si li{color:#fff} .vs .si li::before{width:10px;height:10px;top:7px;border-radius:50%;background:var(--verde)}
+@media(max-width:700px){ .vs{grid-template-columns:1fr} }
+
+/* pasarela */
+.pasos{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,6fr);gap:20px;align-items:start}
+.rail{display:grid;gap:8px}
+.rail button{all:unset;box-sizing:border-box;cursor:pointer;display:flex;align-items:center;gap:14px;padding:14px 18px;border:1px solid var(--line);border-radius:14px;background:var(--card);font:600 17px var(--sora);width:100%;min-height:52px}
+.rail button i{font:500 13px var(--mono);color:var(--cian);font-style:normal}
+.rail button[aria-selected="true"]{background:#fff;color:#04122b;border-color:#fff}
+.rail button[aria-selected="true"] i{color:var(--azul)}
+.panel{position:sticky;top:84px;min-height:250px}
+.panel code,.chip{font-family:var(--mono);font-size:13px;padding:3px 10px;border-radius:99px;background:rgba(159,177,214,.14);display:inline-block}
+.chip.ok{background:rgba(0,179,134,.2);color:#5fe3bf} .chip.wait{background:rgba(245,183,0,.18);color:#ffd45c} .chip.no{color:var(--muted)}
+.resp{display:flex;flex-wrap:wrap;gap:8px;margin-top:22px}
+@media(max-width:820px){ .pasos{grid-template-columns:1fr} .panel{position:static;min-height:0} .rail{grid-template-columns:1fr 1fr} .rail button{padding:12px 14px;font-size:15px} }
+
+/* consola */
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+.tabs button{all:unset;cursor:pointer;font:500 13px var(--mono);letter-spacing:.06em;text-transform:uppercase;padding:10px 16px;border-radius:99px;border:1px solid var(--line);color:var(--muted);min-height:24px}
+.tabs button[aria-selected="true"]{background:var(--cian);border-color:var(--cian);color:#04122b}
+.marco{border:1px solid var(--line);border-radius:18px;overflow:hidden;background:#071b3f;box-shadow:0 40px 120px -40px rgba(0,163,224,.45)}
+.marco .tira{display:flex;gap:6px;align-items:center;padding:12px 16px;border-bottom:1px solid var(--line);font:400 12.5px var(--mono);color:var(--muted)}
+.marco .tira i{width:9px;height:9px;border-radius:50%;background:rgba(159,177,214,.35)}
+.marco .vista{max-height:min(70vh,640px);overflow:auto}
+.marco img{width:100%}
+.dosv{display:grid;grid-template-columns:minmax(0,1.9fr) minmax(0,1fr);gap:20px;align-items:center;margin-top:20px}
+.dosv video{width:100%;border-radius:18px;border:1px solid var(--line);background:#000}
+.dosv .vert{max-width:300px;margin:0 auto;width:100%}
+@media(max-width:820px){ .dosv{grid-template-columns:1fr} }
+
+/* marca */
+.bento{display:grid;grid-template-columns:repeat(6,1fr);gap:16px}
+.bento>*{grid-column:span 2}
+.bento .ancho{grid-column:span 4}
+.bento .logoG{display:flex;align-items:center;justify-content:center;gap:16px;font:800 clamp(38px,6vw,72px) var(--sora);letter-spacing:.06em;min-height:210px;background:linear-gradient(140deg,var(--azul),var(--azul2))}
+.bento .logoG img{width:clamp(48px,7vw,84px)} .bento .logoG b{color:var(--cian)}
+.pal{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.pal span{aspect-ratio:1;border-radius:12px;border:1px solid var(--line);display:flex;align-items:flex-end;padding:8px;font:400 11px var(--mono)}
+.tipo b{font:700 34px var(--sora);display:block} .tipo i{font:400 14px var(--mono);font-style:normal;color:var(--cian)}
+@media(max-width:820px){ .bento{grid-template-columns:1fr} .bento>*,.bento .ancho{grid-column:auto} }
+
+/* ciudad */
+.ciudad{position:relative;border-radius:24px;overflow:hidden;min-height:min(72vh,560px);display:grid;align-items:end;border:1px solid var(--line)}
+.ciudad video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.ciudad .velo{position:absolute;inset:0;background:linear-gradient(180deg,transparent 30%,rgba(4,18,43,.92))}
+.ciudad .txt{position:relative;padding:clamp(22px,4vw,48px);display:grid;gap:12px}
+.ciudad small{font:400 12px var(--mono);color:var(--muted)}
+#evento video{width:100%;border-radius:20px;border:1px solid var(--line);background:#000}
+
+/* preguntas */
+details{border-bottom:1px solid var(--line);padding:18px 0}
+summary{cursor:pointer;font:600 19px var(--sora);list-style:none;display:flex;justify-content:space-between;gap:16px}
+summary::after{content:"+";color:var(--cian);font-weight:400}
+details[open] summary::after{content:"–"}
+details p{margin-top:10px;color:#c9d5ee;max-width:70ch}
+
+/* cierre */
+.cierre{text-align:center;background:radial-gradient(70% 90% at 50% 100%,rgba(0,163,224,.35),transparent 70%),var(--azul2)}
+.cierre .wrap{display:grid;gap:22px;justify-items:center}
+.cierre h2{font-size:clamp(36px,7vw,88px)}
+footer{border-top:1px solid var(--line);padding:32px 0 48px;font-size:13.5px;color:var(--muted)}
+footer .wrap{display:grid;gap:8px}
+footer a{color:#c9d5ee}
+
+/* modal */
+dialog{border:0;padding:0;background:#000;border-radius:16px;width:min(1100px,94vw);overflow:hidden}
+dialog::backdrop{background:rgba(2,8,20,.86)}
+dialog video{width:100%}
+dialog form{position:absolute;top:8px;right:8px;z-index:2}
+dialog form button{font:600 14px var(--plex);padding:10px 14px;border-radius:99px;border:0;background:rgba(255,255,255,.9);cursor:pointer;min-height:40px}
+
+/* entrada */
+.rv{opacity:0;transform:translateY(22px);transition:opacity .7s ease,transform .7s ease}
+.rv.in{opacity:1;transform:none}
+@media(prefers-reduced-motion:reduce){ .rv{opacity:1;transform:none;transition:none} html{scroll-behavior:auto} }
+</style>
+</head>
+<body>
+<div id="prog" aria-hidden="true"></div>
+<header class="top"><div class="wrap">
+  <a class="logo" href="#inicio" aria-label="Nexarm, inicio"><img src="marca/isotipo-blanco.svg" alt=""><span>NEX<b>ARM</b></span></a>
+  <nav class="menu" aria-label="Secciones">
+    <a href="#logrado">Logrado</a><a href="#que-es">Qué es</a><a href="#pasarela">Pasarela</a><a href="#consola">Consola</a><a href="#marca">Marca</a><a href="#barranquilla">Barranquilla</a><a href="#evento">Evento</a><a href="#cierre">Contacto</a>
+  </nav>
+</div></header>
+
+<main>
+<section class="hero" id="inicio">
+  <video autoplay muted loop playsinline poster="media/barranquilla.jpg" src="media/barranquilla.mp4" aria-hidden="true"></video>
+  <div class="velo"></div>
+  <div class="wrap">
+    <p class="tag">// Neona Tech · Barranquilla, Colombia</p>
+    <h1>Agentes de IA que venden. <em>Personas que deciden.</em></h1>
+    <p class="lead">Nexarm es un CRM que operan agentes de IA. Cada acción pasa por siete pasos de control y queda escrita en un libro de auditoría.</p>
+    <div class="btns">
+      <button class="btn p" type="button" id="abrir-video">▶ Ver la consola · 1:58</button>
+      <a class="btn" href="#pasarela">Ver los siete pasos</a>
+    </div>
+    <p class="origen">Diseñado conforme a ISO 9001 · ISO/IEC 27001 · ISO/IEC 42001</p>
+  </div>
+</section>
+
+<section class="block" id="logrado">
+  <div class="wrap">
+    <div class="head rv"><p class="tag">// 01 · Lo logrado</p><h2>Ya funciona, y se puede comprobar.</h2><p class="lead">Estas cifras salen del repositorio público y de sus pruebas del 22 de noviembre de 2026.</p></div>
+    <div class="grid g4">
+      <div class="card rv"><div class="num" data-n="9">9</div><h3>Fases entregadas</h3><p>Del núcleo del CRM a los agentes automáticos ante cada mensaje.</p></div>
+      <div class="card rv"><div class="num" data-n="90">90</div><h3>Comprobaciones pasan</h3><p>Una sola orden, <code style="font-family:var(--mono);font-size:.9em">pnpm test</code>, las corre todas.</p></div>
+      <div class="card rv"><div class="num" data-n="7">7</div><h3>Pasos por acción</h3><p>Ninguna acción entra al CRM sin recorrerlos, en orden.</p></div>
+      <div class="card rv"><div class="num" data-n="7">7</div><h3>Lecciones escritas</h3><p>Cada tropiezo quedó como regla con evidencia y veredicto.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="block alt" id="que-es">
+  <div class="wrap">
+    <div class="head rv"><p class="tag">// 02 · Qué es</p><h2>Tres frases explican todo el producto.</h2></div>
+    <div class="grid g3">
+      <div class="card rv"><p class="tag">El agente</p><h3>Opera</h3><p>Crea contactos, mueve tratos, escribe y hace seguimiento con herramientas MCP.</p></div>
+      <div class="card rv"><p class="tag">La persona</p><h3>Supervisa</h3><p>Aprueba, audita, fija políticas y suspende desde la consola.</p></div>
+      <div class="card rv"><p class="tag">El sistema</p><h3>Impone las reglas</h3><p>La aprobación humana la exige el servidor. No depende de lo que diga el prompt.</p></div>
+    </div>
+    <p class="lead rv" style="margin-top:28px">Funciona con los agentes de venta propios de Nexarm y con el Claude, ChatGPT o Cursor de cada cliente, bajo las mismas reglas.</p>
+
+    <div class="head rv" style="margin-top:clamp(56px,8vw,100px)"><p class="tag">// 03 · Por qué ahora</p><h2>La gente ya pregunta a la IA antes que a un vendedor.</h2></div>
+    <div class="grid g3">
+      <div class="card rv"><div class="num">2.500<small>M</small></div><p>Personas usan cada mes las respuestas de IA de Google.</p><p class="fuente">Fuente: Google I/O, mayo de 2026</p></div>
+      <div class="card rv"><div class="num">900<small>M</small></div><p>Personas usan ChatGPT cada semana.</p><p class="fuente">Fuente: OpenAI, febrero de 2026</p></div>
+      <div class="card rv"><div class="num">−25<small>%</small></div><p>Caída proyectada del volumen de búsqueda tradicional a 2026.</p><p class="fuente">Fuente: Gartner, 19 de febrero de 2024 (proyección)</p></div>
+    </div>
+
+    <div class="head rv" style="margin-top:clamp(56px,8vw,100px)"><p class="tag">// 04 · La diferencia</p><h2>CRM con IA ya existe. Lo que falta es el control.</h2></div>
+    <div class="vs">
+      <div class="card rv"><h3>Agente suelto</h3><ul><li>Responde al cliente sin que nadie lea antes.</li><li>Comparte una sola clave con todo el sistema.</li><li>Si se equivoca, te enteras por el cliente.</li><li>No hay registro confiable de lo que hizo.</li></ul></div>
+      <div class="card si rv"><h3>Agente en Nexarm</h3><ul><li>Redacta, y una persona aprueba o rechaza.</li><li>Tiene credencial y rol propios.</li><li>Se suspende con un clic, o todos a la vez.</li><li>Cada acción queda en un libro encadenado y se puede revertir.</li></ul></div>
+    </div>
+  </div>
+</section>
+
+<section class="block" id="pasarela">
+  <div class="wrap">
+    <div class="head rv"><p class="tag">// 05 · La pasarela</p><h2>Siete pasos, siempre en el mismo orden.</h2><p class="lead">Toca cada paso para ver qué revisa.</p></div>
+    <div class="pasos rv">
+      <div class="rail" role="tablist" aria-label="Pasos de la pasarela" id="rail"></div>
+      <div class="card panel" id="panel" role="tabpanel" aria-live="polite"></div>
+    </div>
+    <div class="resp rv"><span class="chip ok">ejecutado</span><span class="chip wait">pendiente</span><span class="chip no">denegado</span><span style="color:var(--muted);font-size:15px">El agente recibe una de estas tres respuestas.</span></div>
+  </div>
+</section>
+
+<section class="block alt" id="consola">
+  <div class="wrap">
+    <div class="head rv"><p class="tag">// 06 · La consola</p><h2>Lo que ve la persona que supervisa.</h2><p class="lead">Capturas de la consola y del tablero del CRM, con datos ficticios.</p></div>
+    <div class="rv">
+      <div class="tabs" role="tablist" aria-label="Vistas de la consola">
+        <button role="tab" aria-selected="true" data-img="inicio" data-alt="Panel de inicio de la consola de Nexarm">Panel</button>
+        <button role="tab" aria-selected="false" data-img="aprobaciones" data-alt="Bandeja de aprobaciones de la consola de Nexarm">Aprobaciones</button>
+        <button role="tab" aria-selected="false" data-img="libro" data-alt="Libro de auditoría de la consola de Nexarm">Libro de auditoría</button>
+        <button role="tab" aria-selected="false" data-img="crm-hoy" data-alt="Pantalla de inicio del CRM con las tareas que esperan a una persona">CRM · Hoy</button>
+        <button role="tab" aria-selected="false" data-img="crm-bandeja" data-alt="Bandeja omnicanal del CRM">CRM · Bandeja</button>
+        <button role="tab" aria-selected="false" data-img="crm-embudo" data-alt="Embudo de ventas del CRM">CRM · Embudo</button>
+        <button role="tab" aria-selected="false" data-img="crm-tratos" data-alt="Tablero de tratos del CRM">CRM · Tratos</button>
+      </div>
+      <div class="marco"><div class="tira"><i></i><i></i><i></i>&nbsp;nexarm · consola de supervisión</div><div class="vista"><img id="vista" src="media/consola-inicio.webp" alt="Panel de inicio de la consola de Nexarm" loading="lazy" width="1600" height="1000"></div></div>
+    </div>
+    <div class="dosv rv">
+      <video controls preload="none" playsinline poster="demo.jpg" src="demo.mp4" aria-label="La consola de Nexarm en 2 minutos"></video>
+      <video class="vert" controls preload="none" playsinline poster="media/arm-9x16.jpg" src="media/arm-9x16.mp4" aria-label="Nexarm explicado en 43 segundos, formato vertical"></video>
+    </div>
+  </div>
+</section>
+
+<section class="block" id="marca">
+  <div class="wrap">
+    <div class="head rv"><p class="tag">// 07 · La marca</p><h2>Una sola cara para el producto.</h2><p class="lead">Nexarm hereda el azul, el cian y las tres tipografías de Neona Tech.</p></div>
+    <div class="bento">
+      <div class="card ancho logoG rv"><img src="marca/isotipo-blanco.svg" alt=""><span>NEX<b>ARM</b></span></div>
+      <div class="card rv"><p class="tag">Paleta</p><div class="pal"><span style="background:#0A2A5E">#0A2A5E</span><span style="background:#00A3E0;color:#04122b">#00A3E0</span><span style="background:#00B386;color:#04122b">#00B386</span><span style="background:#2E3440">#2E3440</span></div><p>Azul profundo, cian de acción, verde de «ejecutado» y antracita.</p></div>
+      <div class="card tipo rv"><i>Sora</i><b>Títulos</b><p>Geométrica y firme, para decir una sola idea.</p></div>
+      <div class="card tipo rv"><i>IBM Plex Sans</i><b style="font-family:var(--plex);font-weight:600">Lectura</b><p>Texto largo, tablas y formularios.</p></div>
+      <div class="card tipo rv"><i>IBM Plex Mono</i><b style="font-family:var(--mono);font-weight:500;font-size:26px">// 01 · Etiqueta</b><p>Etiquetas, estados y código.</p></div>
+    </div>
+    <div class="btns rv" style="margin-top:22px"><a class="btn" href="marca">Abrir el manual de marca</a></div>
+  </div>
+</section>
+
+<section class="block alt" id="barranquilla">
+  <div class="wrap">
+    <div class="ciudad rv">
+      <video autoplay muted loop playsinline poster="media/barranquilla.jpg" src="media/barranquilla.mp4" aria-hidden="true"></video>
+      <div class="velo"></div>
+      <div class="txt"><p class="tag">// 08 · De dónde viene</p><h2>Hecho en Barranquilla.</h2><p class="lead">Neona Tech trabaja desde la Cra. 52 No. 79-19, en Barranquilla, Atlántico.</p><small>Video ilustrativo generado con IA.</small></div>
+    </div>
+  </div>
+</section>
+
+<section class="block" id="evento">
+  <div class="wrap">
+    <div class="head rv"><p class="tag">// 09 · El evento</p><h2>Semana T, en Barranquilla.</h2><p class="lead">Del 16 al 21 de noviembre de 2026. Fotos tomadas por el equipo de Neona Tech en el salón principal.</p></div>
+    <video class="rv" controls muted loop playsinline preload="none" poster="media/evento.jpg" src="media/evento.mp4" aria-label="Fotos del escenario de Semana T en Barranquilla"></video>
+    <p class="fuente rv" style="margin-top:12px">Semana T es un evento de sus organizadores. Las marcas que aparecen en pantalla pertenecen a sus dueños.</p>
+  </div>
+</section>
+
+<section class="block" id="metodo">
+  <div class="wrap">
+    <div class="head rv"><p class="tag">// 10 · Preguntas</p><h2>Lo que más nos preguntan.</h2></div>
+    <div class="rv">
+      <details><summary>¿Qué es MCP?</summary><p>Es un protocolo abierto que permite a un agente de IA usar herramientas de forma controlada. En Nexarm, cada herramienta del CRM se ofrece por MCP y pasa por la pasarela.</p></details>
+      <details><summary>¿Puedo usar mi propio asistente?</summary><p>Sí. El Claude, ChatGPT o Cursor de cada cliente se conecta con OAuth 2.1 y PKCE, y queda bajo las mismas reglas que los agentes propios.</p></details>
+      <details><summary>¿Qué pasa si el agente se equivoca?</summary><p>Una persona deshace la acción desde el libro de auditoría. Un botón detiene a todos los agentes de un cliente.</p></details>
+      <details><summary>¿Nexarm está certificado en ISO?</summary><p>Nexarm está diseñado conforme a ISO 9001:2015, ISO/IEC 27001:2022 e ISO/IEC 42001:2023. Las normas certifican el sistema de gestión de una empresa, no un programa.</p></details>
+      <details><summary>¿Cómo se construyó?</summary><p>Con agentes de IA y un método que convierte cada tropiezo en una regla comprobada. Está publicado paso a paso en <a href="como-lo-hicimos">Cómo construimos Nexarm</a>.</p></details>
+    </div>
+  </div>
+</section>
+
+<section class="block cierre" id="cierre">
+  <div class="wrap">
+    <p class="tag">// Siguiente paso</p>
+    <h2 class="rv">Míralo trabajar con un caso tuyo.</h2>
+    <p class="lead rv">Trae una conversación real de tu negocio y la recorremos por los siete pasos.</p>
+    <div class="btns rv" style="justify-content:center">
+      <a class="btn p" href="tel:+576053225918">Llamar · +57 605 322 5918</a>
+      <a class="btn" href="mailto:gerencia@neona.tech?subject=Quiero%20ver%20Nexarm%20con%20un%20caso%20m%C3%ADo">gerencia@neona.tech</a>
+      <a class="btn" href="./">Leer la guía</a>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer><div class="wrap">
+  <p>© 2026 NEONATECH E-BUSINESS S.A.S. · NIT 902.118.619-9 · Cra. 52 No. 79-19, Piso 3, Oficina 19, Barranquilla, Colombia. Todos los derechos reservados. Nexarm es un producto de Neona Tech.</p>
+  <p><a href="https://neona.tech/privacidad">Política de privacidad y tratamiento de datos</a> · <a href="https://neona.tech/terminos">Términos y condiciones</a> · <a href="marca">Manual de marca</a> · <a href="como-lo-hicimos">Cómo lo hicimos</a></p>
+  <p>Cookies: esta página no usa cookies de seguimiento ni de publicidad.</p>
+</div></footer>
+
+<dialog id="modal" aria-label="Video de la consola de Nexarm">
+  <form method="dialog"><button>Cerrar</button></form>
+  <video id="modal-video" controls playsinline poster="demo.jpg" preload="none" src="demo.mp4"></video>
+</dialog>
+
+<script>
+(function(){
+  var PASOS=[
+    ["Identificar","Qué agente llama. Cada uno entra con credencial propia: un token fijo, o un inicio de sesión OAuth 2.1 con PKCE.","Sin credencial válida, la llamada termina aquí."],
+    ["Autorizar","El rol del agente y su permiso fino por herramienta.","Un agente sin permiso para esa herramienta recibe «denegado»."],
+    ["Validar","Que los datos cumplan lo que la herramienta espera.","Un dato mal formado no llega al CRM."],
+    ["Evaluar políticas","Monto, frecuencia, horario y campos restringidos.","Si una regla lo frena, queda «denegado» o pasa a una persona."],
+    ["Esperar a una persona","Si una política lo pide, decide un supervisor en la consola.","La acción queda «pendiente» hasta que alguien aprueba o rechaza."],
+    ["Ejecutar","La herramienta cambia el CRM en nombre del agente.","El resultado vuelve al agente como «ejecutado»."],
+    ["Registrar","La llamada queda en el libro, se ejecute o no.","Cada entrada se encadena a la anterior con un hash."]
+  ];
+  var rail=document.getElementById('rail'), panel=document.getElementById('panel');
+  function ver(i){
+    [].forEach.call(rail.children,function(b,k){b.setAttribute('aria-selected',k===i)});
+    var p=PASOS[i];
+    panel.innerHTML='<p class="tag">Paso '+(i+1)+' de 7</p><h3 style="font-size:28px"></h3><p></p><p class="tag" style="margin-top:14px;color:var(--muted)">Qué pasa después</p><p></p>';
+    panel.querySelector('h3').textContent=p[0];
+    var ps=panel.querySelectorAll('p'); ps[1].textContent=p[1]; ps[3].textContent=p[2];
+  }
+  PASOS.forEach(function(p,i){
+    var b=document.createElement('button'); b.type='button'; b.setAttribute('role','tab');
+    var n=document.createElement('i'); n.textContent='0'+(i+1); b.appendChild(n); b.appendChild(document.createTextNode(p[0]));
+    b.addEventListener('click',function(){ver(i)}); rail.appendChild(b);
+  });
+  ver(0);
+
+  // pestañas de la consola
+  var vista=document.getElementById('vista');
+  [].forEach.call(document.querySelectorAll('.tabs button'),function(b){
+    b.addEventListener('click',function(){
+      [].forEach.call(b.parentNode.children,function(x){x.setAttribute('aria-selected',x===b)});
+      vista.src='media/consola-'+b.dataset.img+'.webp'; vista.alt=b.dataset.alt; vista.parentNode.scrollTop=0;
+    });
+  });
+
+  // video en modal
+  var modal=document.getElementById('modal'), mv=document.getElementById('modal-video');
+  document.getElementById('abrir-video').addEventListener('click',function(){
+    if(modal.showModal){modal.showModal(); mv.play().catch(function(){});} else {location.href='demo.mp4';}
+  });
+  modal.addEventListener('close',function(){mv.pause()});
+  modal.addEventListener('click',function(e){if(e.target===modal)modal.close()});
+
+  // barra de progreso y sección activa
+  var prog=document.getElementById('prog'), enlaces=[].slice.call(document.querySelectorAll('nav.menu a'));
+  function alScroll(){
+    var h=document.documentElement; prog.style.width=(h.scrollTop/(h.scrollHeight-h.clientHeight)*100)+'%';
+    var act=null; enlaces.forEach(function(a){var s=document.querySelector(a.getAttribute('href')); if(s&&s.getBoundingClientRect().top<innerHeight*.4)act=a;});
+    enlaces.forEach(function(a){a.classList.toggle('on',a===act)});
+  }
+  addEventListener('scroll',alScroll,{passive:true}); alScroll();
+
+  // entrada de bloques y contadores
+  var quieto=matchMedia('(prefers-reduced-motion:reduce)').matches;
+  if('IntersectionObserver' in window && !quieto){
+    var io=new IntersectionObserver(function(es){es.forEach(function(e){
+      if(!e.isIntersecting)return; e.target.classList.add('in'); io.unobserve(e.target);
+      var n=e.target.querySelector('[data-n]'); if(!n)return;
+      var fin=+n.dataset.n, t0=performance.now();
+      (function paso(t){var k=Math.min(1,(t-t0)/900); n.textContent=Math.round(fin*k); if(k<1)requestAnimationFrame(paso);})(t0);
+    })},{threshold:.15});
+    [].forEach.call(document.querySelectorAll('.rv'),function(el){io.observe(el)});
+  } else { [].forEach.call(document.querySelectorAll('.rv'),function(el){el.classList.add('in')}); }
+
+})();
+</script>
+</body>
+</html>

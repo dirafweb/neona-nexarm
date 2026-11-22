@@ -39,3 +39,5 @@ Publicado por NEONATECH E-BUSINESS S.A.S. (Neona Tech), Barranquilla, Colombia. 
 - [Política de privacidad y tratamiento de datos](https://neona.tech/privacidad)
 - [Términos y condiciones](https://neona.tech/terminos)
 - Estas páginas no usan cookies ni rastreadores.
+- [Presentación de Nexarm](https://guia-nexarm.vercel.app/presentacion): qué es, los siete pasos de la pasarela, la consola, la marca y el contacto.
+- [Manual de marca de Nexarm](https://guia-nexarm.vercel.app/marca): logotipo, colores, tipografías, estados y voz.

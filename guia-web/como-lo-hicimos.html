@@ -93,6 +93,14 @@ tr:last-child td{border-bottom:0}
 th{font-family:var(--mono);font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-weight:500;background:var(--soft)}
 td:first-child{font-weight:600;color:var(--head);white-space:nowrap}
 td:first-child i{font-family:var(--mono);font-style:normal;font-weight:400;color:var(--accent);margin-right:8px;font-variant-numeric:tabular-nums}
+@media (max-width:640px){
+  table{min-width:0}
+  thead,th{display:none}
+  tr{display:block;padding:12px 16px;border-bottom:1px solid var(--line)}
+  tr:last-child{border-bottom:0}
+  td{display:block;padding:2px 0;border:0}
+  td:first-child{white-space:normal;margin-bottom:4px}
+}
 /* ppc */
 .ppc{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;counter-reset:p}
 .ppc .card{counter-increment:p}
