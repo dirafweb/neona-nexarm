@@ -1,0 +1,370 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Cómo construimos Nexarm con agentes de IA | Neona Tech</title>
+<meta name="description" content="Cómo Neona Tech construye Nexarm con agentes de IA: la pasarela de siete pasos, el reparto en seis capas y el método Proponer, Probar, Componer para convertir cada tropiezo en una regla comprobada.">
+<meta name="robots" content="index,follow,max-snippet:-1,max-image-preview:large">
+<meta name="author" content="Neona Tech">
+<link rel="canonical" href="https://guia-nexarm.vercel.app/como-lo-hicimos">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Cómo construimos Nexarm con agentes de IA | Neona Tech">
+<meta property="og:description" content="Cómo Neona Tech construye Nexarm con agentes de IA: la pasarela de siete pasos, el reparto en seis capas y el método Proponer, Probar, Componer para convertir cada tropiezo en una regla comprobada.">
+<meta property="og:url" content="https://guia-nexarm.vercel.app/como-lo-hicimos">
+<meta property="og:locale" content="es_CO">
+<meta property="article:published_time" content="2026-11-22">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Sora:wght@600;700&display=swap">
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "TechArticle", "headline": "Cómo construimos Nexarm con agentes de IA, y cómo aprende de sus tropiezos", "description": "Cómo Neona Tech construye Nexarm con agentes de IA: la pasarela de siete pasos, el reparto en seis capas y el método Proponer, Probar, Componer para convertir cada tropiezo en una regla comprobada.", "inLanguage": "es", "datePublished": "2026-11-22", "dateModified": "2026-11-22", "mainEntityOfPage": "https://guia-nexarm.vercel.app/como-lo-hicimos", "author": {"@type": "Organization", "name": "Neona Tech", "legalName": "NEONATECH E-BUSINESS S.A.S.", "url": "https://neona.tech", "telephone": "+57 605 322 5918", "email": "gerencia@neona.tech", "address": {"@type": "PostalAddress", "addressLocality": "Barranquilla", "addressRegion": "Atlántico", "addressCountry": "CO"}}, "publisher": {"@type": "Organization", "name": "Neona Tech", "legalName": "NEONATECH E-BUSINESS S.A.S.", "url": "https://neona.tech", "telephone": "+57 605 322 5918", "email": "gerencia@neona.tech", "address": {"@type": "PostalAddress", "addressLocality": "Barranquilla", "addressRegion": "Atlántico", "addressCountry": "CO"}}, "about": ["agentes de IA", "gobernanza de IA", "Model Context Protocol", "CRM", "arnés de agentes"], "citation": "https://arxiv.org/abs/2610.14224"}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "¿Qué es Nexarm?", "acceptedAnswer": {"@type": "Answer", "text": "Nexarm es un CRM de Neona Tech operado por agentes de IA a través de MCP. Cada acción de un agente pasa por una pasarela de gobernanza de siete pasos y queda en un libro de auditoría."}}, {"@type": "Question", "name": "¿Cómo se controla lo que hace un agente de IA en Nexarm?", "acceptedAnswer": {"@type": "Answer", "text": "Con identidad propia por agente, roles y permisos por herramienta, políticas de monto, frecuencia y horario, aprobación humana exigida por el servidor y un libro de auditoría encadenado con hash."}}, {"@type": "Question", "name": "¿Qué es el método Proponer, Probar, Componer?", "acceptedAnswer": {"@type": "Answer", "text": "Es la forma de mejorar el arnés de un agente: ante una tarea que salió mal se proponen dos o tres correcciones, se prueba la misma tarea con cada una y la regla final sale de comparar las ejecuciones. Viene del trabajo Harness² de Google Research."}}, {"@type": "Question", "name": "¿Qué formato tiene una lección?", "acceptedAnswer": {"@type": "Answer", "text": "Cuatro campos: la señal que la dispara, la operación a hacer, la evidencia de dos ejecuciones y un veredicto: ayudó, empeoró, sin efecto o confundido."}}]}]}</script>
+<style>*,*::before,*::after{box-sizing:border-box}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+</head>
+<body>
+<style>
+/* Concepto: un documento de una columna que se lee como el libro de auditoria de Nexarm:
+   cada seccion es una entrada numerada, unida a la siguiente por un riel. */
+:root{
+  --bg:#F4F7FB; --surface:#FFFFFF; --soft:#E9F1FA; --line:#D6DFEB;
+  --ink:#14213A; --muted:#55627A; --head:#0A2A5E;
+  --accent:#00779F; --cyan:#00A3E0; --ok:#00805C; --ok-bg:#E2F6EF; --warn:#8A5A00; --warn-bg:#FBF0D9;
+  --display:'Sora',system-ui,sans-serif; --body:'IBM Plex Sans',system-ui,sans-serif; --mono:'IBM Plex Mono',ui-monospace,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#071426; --surface:#0E1F37; --soft:#132A49; --line:#233756;
+    --ink:#E6EDF7; --muted:#9DADC6; --head:#DDE9FF;
+    --accent:#4CC4F2; --cyan:#00A3E0; --ok:#3AD3A6; --ok-bg:#0D3A30; --warn:#F1BC62; --warn-bg:#3B2C0C;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#071426; --surface:#0E1F37; --soft:#132A49; --line:#233756;
+  --ink:#E6EDF7; --muted:#9DADC6; --head:#DDE9FF;
+  --accent:#4CC4F2; --cyan:#00A3E0; --ok:#3AD3A6; --ok-bg:#0D3A30; --warn:#F1BC62; --warn-bg:#3B2C0C;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.6}
+.wrap{max-width:1000px;margin:0 auto;padding-block:48px 72px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:flex;flex-direction:column;gap:56px}
+h1,h2,h3{font-family:var(--display);color:var(--head);text-wrap:balance;margin:0;line-height:1.15}
+h1{font-size:clamp(30px,5vw,46px);font-weight:700;letter-spacing:-.01em}
+h2{font-size:clamp(22px,3.2vw,29px);font-weight:700}
+h3{font-size:17px;font-weight:600}
+p{margin:0;max-width:66ch}
+code{font-family:var(--mono);font-size:.86em;background:var(--soft);padding:1px 6px;border-radius:4px;overflow-wrap:anywhere}
+.tag{font-family:var(--mono);font-size:12.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);font-weight:500}
+.muted{color:var(--muted)}
+header{display:flex;flex-direction:column;gap:18px}
+.lede{font-size:18px;color:var(--muted)}
+.facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));border:1px solid var(--line);border-radius:10px;background:var(--surface);overflow:hidden}
+.facts div{padding:16px 18px;border-right:1px solid var(--line);border-bottom:1px solid var(--line);margin:0 -1px -1px 0;min-width:0}
+.facts b{display:block;font-family:var(--display);font-size:26px;color:var(--head);font-variant-numeric:tabular-nums;line-height:1.1}
+.facts span{font-size:13.5px;color:var(--muted)}
+section{display:flex;flex-direction:column;gap:20px;position:relative;padding-left:26px;border-left:2px solid var(--line)}
+section::before{content:"";position:absolute;left:-7px;top:4px;width:12px;height:12px;border-radius:50%;background:var(--cyan);box-shadow:0 0 0 4px var(--bg)}
+.head{display:flex;flex-direction:column;gap:8px}
+.two{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:20px;display:flex;flex-direction:column;gap:10px;min-width:0}
+.card p{font-size:15px}
+.say{font-family:var(--mono);font-size:13.5px;border-left:3px solid var(--cyan);padding:6px 12px;background:var(--soft);border-radius:0 6px 6px 0;overflow-wrap:anywhere}
+.kv{display:grid;grid-template-columns:auto 1fr;gap:4px 14px;font-size:14.5px;margin:0}
+.kv dt{font-family:var(--mono);font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);padding-top:3px}
+.kv dd{margin:0;min-width:0}
+/* pasarela */
+.rail{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}
+.rail button{font:inherit;cursor:pointer;background:var(--surface);color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:10px 8px;display:flex;flex-direction:column;gap:2px;align-items:flex-start;text-align:left;min-width:0}
+.rail button b{font-family:var(--mono);font-size:12px;color:var(--accent);font-weight:500}
+.rail button span{font-size:13.5px;font-weight:600;overflow-wrap:anywhere}
+.rail button[aria-selected="true"]{background:var(--head);border-color:var(--head);color:var(--bg)}
+.rail button[aria-selected="true"] b{color:var(--cyan)}
+.rail button:focus-visible,.filter button:focus-visible{outline:2px solid var(--cyan);outline-offset:2px}
+.step{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:22px;display:grid;grid-template-columns:1.5fr 1fr;gap:20px}
+.step>div{display:flex;flex-direction:column;gap:8px;min-width:0}
+.out{font-family:var(--mono);font-size:13px;padding:3px 9px;border-radius:99px;background:var(--soft);color:var(--ink);align-self:flex-start}
+.outs{display:flex;flex-wrap:wrap;gap:10px;font-size:14.5px}
+.outs span{display:inline-flex;gap:8px;align-items:center}
+.pill{font-family:var(--mono);font-size:12px;padding:2px 9px;border-radius:99px;white-space:nowrap}
+.pill.ok{background:var(--ok-bg);color:var(--ok)} .pill.warn{background:var(--warn-bg);color:var(--warn)} .pill.no{background:var(--soft);color:var(--muted)}
+/* tablas */
+.scroll{overflow-x:auto;border:1px solid var(--line);border-radius:10px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;min-width:620px;font-size:14.5px}
+th,td{text-align:left;padding:12px 16px;border-bottom:1px solid var(--line);vertical-align:top}
+tr:last-child td{border-bottom:0}
+th{font-family:var(--mono);font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-weight:500;background:var(--soft)}
+td:first-child{font-weight:600;color:var(--head);white-space:nowrap}
+td:first-child i{font-family:var(--mono);font-style:normal;font-weight:400;color:var(--accent);margin-right:8px;font-variant-numeric:tabular-nums}
+/* ppc */
+.ppc{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;counter-reset:p}
+.ppc .card{counter-increment:p}
+.ppc .card h3::before{content:counter(p) " · ";font-family:var(--mono);font-weight:400;color:var(--accent)}
+ul{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:6px;font-size:15px}
+/* lecciones */
+.filter{display:flex;flex-wrap:wrap;gap:8px}
+.filter button{font:inherit;font-size:14px;cursor:pointer;border:1px solid var(--line);background:var(--surface);color:var(--ink);padding:6px 14px;border-radius:99px}
+.filter button[aria-pressed="true"]{background:var(--head);color:var(--bg);border-color:var(--head)}
+.lessons{display:flex;flex-direction:column;gap:14px}
+.lesson{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:20px;display:flex;flex-direction:column;gap:14px;min-width:0}
+.lesson .top{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between}
+.where{font-size:13.5px;color:var(--muted)}
+.flow{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;counter-reset:f}
+.flow div{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:14px;font-size:14px;counter-increment:f;display:flex;flex-direction:column;gap:4px;min-width:0}
+.flow div::before{content:"0" counter(f);font-family:var(--mono);font-size:12px;color:var(--accent)}
+.flow b{font-family:var(--display);color:var(--head);font-size:15px}
+footer{border-top:1px solid var(--line);padding-top:20px;font-size:13.5px;color:var(--muted);display:flex;flex-direction:column;gap:6px}
+@media (max-width:760px){
+  .rail{grid-template-columns:repeat(2,1fr)}
+  .step{grid-template-columns:1fr}
+  .flow{grid-template-columns:1fr}
+  section{padding-left:18px}
+  .wrap{gap:44px;padding-block:32px 56px}
+}
+a{color:var(--accent)}
+.faq{display:flex;flex-direction:column;gap:14px}
+.faq h3{font-size:18px}
+.legal{display:flex;flex-direction:column;gap:8px}
+</style>
+
+<div class="wrap">
+
+<header>
+  <span class="tag">Neona Tech · publicado el 22 de noviembre de 2026</span>
+  <h1>Cómo construimos Nexarm con agentes de IA, y cómo aprende de sus tropiezos</h1>
+  <p class="lede">Nexarm es un CRM que operan agentes de IA bajo reglas. Esta página explica tres procesos: el camino de cada acción, el reparto del trabajo y la forma en que una tarea que sale mal se convierte en una regla comprobada.</p>
+  <div class="facts">
+    <div><b>2</b><span>skills nuevas, del 19 de noviembre</span></div>
+    <div><b>7</b><span>pasos de la pasarela por cada acción</span></div>
+    <div><b>3</b><span>pasos para mejorar el arnés</span></div>
+    <div><b>7</b><span>lecciones de este proyecto: 6 ayudaron, 1 no tuvo efecto</span></div>
+  </div>
+</header>
+
+<section id="nuevo">
+  <div class="head"><span class="tag">// 01 · Lo nuevo</span><h2>Dos skills que cambian cómo se corrige un error</h2>
+  <p>El arnés es todo lo que rodea al modelo: instrucciones, reglas, memoria, skills, guías de herramientas y scripts. Cuando una tarea sale mal, se corrige el arnés y el modelo queda igual.</p></div>
+  <div class="two">
+    <div class="card">
+      <h3>xentris-auto-mejora-harness</h3>
+      <p>Toma una tarea que salió mal, propone dos o tres correcciones distintas, las prueba y se queda con la que demuestra mejorar. Método tomado de <a href="https://arxiv.org/abs/2610.14224" rel="noopener">Harness²</a>, de Google Research.</p>
+      <div class="say">«mejora el skill con lo que aprendiste»</div>
+      <div class="say">«por qué falló el agente»</div>
+    </div>
+    <div class="card">
+      <h3>xentris-crear-skill</h3>
+      <p>Convierte un trabajo terminado en una receta repetible. Desde el 19 de noviembre exige que cada regla se escriba con cuatro campos: señal, lección, evidencia y veredicto.</p>
+      <div class="say">«crea un skill de esto»</div>
+      <div class="say">«que esto quede como buena práctica»</div>
+    </div>
+  </div>
+  <p class="muted">Las dos viven en <code>~/.claude/skills/</code> y sirven en todos los proyectos del equipo.</p>
+</section>
+
+<section id="pasarela">
+  <div class="head"><span class="tag">// 02 · La pasarela</span><h2>El camino de una acción, de la petición al libro</h2>
+  <p>Ninguna acción entra al CRM sin pasar por estos siete pasos, en este orden. Aplica igual a un agente propio, al Claude de un cliente o a la pantalla. Toca cada paso para ver qué revisa.</p></div>
+  <div class="rail" role="tablist" aria-label="Pasos de la pasarela">
+    <button role="tab" aria-selected="true" data-i="0"><b>01</b><span>Identificar</span></button>
+    <button role="tab" aria-selected="false" data-i="1"><b>02</b><span>Autorizar</span></button>
+    <button role="tab" aria-selected="false" data-i="2"><b>03</b><span>Validar</span></button>
+    <button role="tab" aria-selected="false" data-i="3"><b>04</b><span>Políticas</span></button>
+    <button role="tab" aria-selected="false" data-i="4"><b>05</b><span>Aprobación</span></button>
+    <button role="tab" aria-selected="false" data-i="5"><b>06</b><span>Ejecutar</span></button>
+    <button role="tab" aria-selected="false" data-i="6"><b>07</b><span>Registrar</span></button>
+  </div>
+  <div class="step" role="tabpanel" aria-live="polite">
+    <div><h3 id="s-t">Identificar al agente</h3><p id="s-d">Cada agente entra con su propia credencial: un token fijo, o un inicio de sesión OAuth 2.1 con PKCE en el que una persona elige con qué agente actúa ese cliente.</p></div>
+    <div><span class="tag">Si no pasa</span><p id="s-f">Sin credencial válida la llamada termina aquí.</p><span class="out" id="s-o">src/gateway.ts</span></div>
+  </div>
+  <div class="outs">
+    <span><span class="pill ok">ejecutado</span>la acción se hizo y quedó en el libro</span>
+    <span><span class="pill warn">pendiente</span>espera a una persona</span>
+    <span><span class="pill no">denegado</span>una regla la frenó</span>
+  </div>
+  <p class="muted">El agente recibe una de esas tres respuestas. Con «denegado» o «pendiente» lo informa y se detiene ahí.</p>
+</section>
+
+<section id="capas">
+  <div class="head"><span class="tag">// 03 · Quién hace qué</span><h2>Seis capas, cada una con un solo oficio</h2>
+  <p>La skill <code>xentris-arquitectura-orquestadora</code> reparte un agente operativo en seis capas. Así quedan en Nexarm.</p></div>
+  <div class="scroll"><table>
+    <tr><th>Capa</th><th>Qué hace</th><th>En Nexarm</th></tr>
+    <tr><td><i>1</i>Orquestador</td><td>Decide, coordina y habla con la persona</td><td>La sesión de Claude Code, con la memoria del proyecto</td></tr>
+    <tr><td><i>2</i>Fuentes de verdad</td><td>Lo que se afirma se puede señalar aquí</td><td>La base PostgreSQL, el libro de auditoría y los documentos en git</td></tr>
+    <tr><td><i>3</i>Trabajadores</td><td>Un oficio por trabajador</td><td>Agentes <code>prospeccion</code>, <code>calificacion</code>, <code>seguimiento</code> y las entradas de Chatwoot y XENCRM</td></tr>
+    <tr><td><i>4</i>Flujos automáticos</td><td>Lo repetitivo corre sin abrir el chat</td><td>Con <code>NEXARM_AGENTES_AUTO=1</code>, cada mensaje entrante despierta a los agentes de venta</td></tr>
+    <tr><td><i>5</i>Subagentes</td><td>Barridos amplios en paralelo, con verificación</td><td>Agentes <code>director</code>, <code>arquitecto</code> y <code>orquestador-embudos</code></td></tr>
+    <tr><td><i>6</i>Salidas</td><td>Lo que llega a terceros</td><td><code>message_send</code> por correo o WhatsApp, con aprobación de una persona</td></tr>
+  </table></div>
+</section>
+
+<section id="arnes">
+  <div class="head"><span class="tag">// 04 · El arnés</span><h2>Proponer, probar, componer</h2>
+  <p>Una corrección entra al proyecto solo si dos ejecuciones muestran la diferencia. Una sola candidata no da contraste, así que siempre se prueban al menos dos.</p></div>
+  <div class="ppc">
+    <div class="card"><h3>Proponer</h3><p>Se nombra qué pieza del arnés falló y se escriben dos o tres correcciones distintas para esa pieza.</p></div>
+    <div class="card"><h3>Probar</h3><p>Se corre la misma tarea con cada corrección y se anota qué cambió y qué sigue roto.</p></div>
+    <div class="card"><h3>Componer</h3><p>La regla final sale de comparar las ejecuciones. Se escribe con rutas y comandos exactos, junto a su evidencia.</p></div>
+  </div>
+  <h3>Las ocho piezas del arnés en este proyecto</h3>
+  <div class="scroll"><table>
+    <tr><th>Pieza</th><th>Dónde vive</th></tr>
+    <tr><td><i>1</i>Rol e instrucciones</td><td>El prompt de cada agente en <code>nexarm/src/sales/agents.ts</code></td></tr>
+    <tr><td><i>2</i>Reglas de freno</td><td><code>src/gateway.ts</code> y <code>src/policies.ts</code></td></tr>
+    <tr><td><i>3</i>Memoria</td><td><code>MEMORY.md</code> y un archivo por hecho en la carpeta de memoria del proyecto</td></tr>
+    <tr><td><i>4</i>Skills</td><td><code>~/.claude/skills/xentris-*</code></td></tr>
+    <tr><td><i>5</i>Guía de herramientas</td><td><code>src/tools.ts</code>: cada herramienta declara el rol mínimo que la usa</td></tr>
+    <tr><td><i>6</i>Scripts</td><td><code>pnpm seed</code>, <code>pnpm test</code>, <code>pnpm libro</code>, <code>pnpm agente</code></td></tr>
+    <tr><td><i>7</i>Subagentes</td><td><code>~/.claude/agents/</code></td></tr>
+    <tr><td><i>8</i>Ganchos de sesión</td><td><code>settings.json</code>: saludo de arranque, escritura clara y guardia de borrado</td></tr>
+  </table></div>
+</section>
+
+<section id="lecciones">
+  <div class="head"><span class="tag">// 05 · Lecciones de este proyecto</span><h2>Siete tropiezos del proyecto, ya escritos como reglas</h2>
+  <p>Salen de revisar todos los errores de herramienta del 10 al 22 de noviembre: 13 en total. Cada lección lleva la señal que la dispara, la operación a hacer, lo que se vio cambiar y el veredicto.</p></div>
+  <div class="filter" role="group" aria-label="Filtrar por veredicto">
+    <button aria-pressed="true" data-f="all">Todas · 7</button>
+    <button aria-pressed="false" data-f="ok">Ayudó · 6</button>
+    <button aria-pressed="false" data-f="conf">Sin efecto · 1</button>
+  </div>
+  <div class="lessons">
+    <article class="lesson" data-v="ok">
+      <div class="top"><h3>Los archivos largos se escriben con la herramienta de archivos</h3><span class="pill ok">ayudó</span></div>
+      <dl class="kv">
+        <dt>Señal</dt><dd>Hay que crear o reemplazar un archivo de más de cien líneas desde la terminal.</dd>
+        <dt>Lección</dt><dd>Usar la herramienta de escritura de archivos. Un heredoc corto sí funciona.</dd>
+        <dt>Evidencia</dt><dd>El 11 de noviembre, tres heredocs largos terminaron en <code>unexpected EOF</code> y los tres archivos entraron con la herramienta. El 22 de noviembre, tres heredocs cortos con barras invertidas y comillas pasaron: esos caracteres no son la causa.</dd>
+      </dl>
+      <span class="where">Guardada en la memoria del proyecto. La prueba corrigió la nota anterior, que culpaba a las barras invertidas.</span>
+    </article>
+    <article class="lesson" data-v="ok">
+      <div class="top"><h3>Leer antes de editar fuera de la carpeta de trabajo</h3><span class="pill ok">ayudó</span></div>
+      <dl class="kv">
+        <dt>Señal</dt><dd>Se edita un archivo fuera de <code>nexarm/</code>: la raíz del repositorio, otra carpeta o una skill.</dd>
+        <dt>Lección</dt><dd>Leer el archivo con la herramienta de lectura antes de editarlo.</dd>
+        <dt>Evidencia</dt><dd>El 14, el 16 y el 22 de noviembre la edición fue rechazada. Tras leer el archivo, la misma edición entró.</dd>
+      </dl>
+      <span class="where">Guardada en la memoria del proyecto. Es el tropiezo más repetido: cuatro veces.</span>
+    </article>
+    <article class="lesson" data-v="ok">
+      <div class="top"><h3>El puerto sigue ocupado tras detener una tarea</h3><span class="pill ok">ayudó</span></div>
+      <dl class="kv">
+        <dt>Señal</dt><dd>Se detiene una tarea de fondo que arrancó un servidor con <code>pnpm</code> en Windows y hay que volver a usar su puerto.</dd>
+        <dt>Lección</dt><dd>Buscar el dueño del puerto con <code>Get-NetTCPConnection -LocalPort</code> y cerrar ese proceso antes de arrancar de nuevo.</dd>
+        <dt>Evidencia</dt><dd>Puerto 3099: tras detener la tarea, el arranque nuevo salió con <code>EADDRINUSE</code>. Tras cerrar el proceso dueño del puerto, arrancó y respondió 200.</dd>
+      </dl>
+      <span class="where">Guardada en la memoria del proyecto.</span>
+    </article>
+    <article class="lesson" data-v="ok">
+      <div class="top"><h3>La foto de celular sale recortada</h3><span class="pill ok">ayudó</span></div>
+      <dl class="kv">
+        <dt>Señal</dt><dd>Captura con Chrome sin ventana a menos de 500 px de ancho.</dd>
+        <dt>Lección</dt><dd>Pedir <code>--window-size=500,1080</code>. Chrome no baja de 500 px.</dd>
+        <dt>Evidencia</dt><dd>La portada a 430 px salió cortada por la derecha. A 500 px salió completa.</dd>
+      </dl>
+      <span class="where">Guardada en la skill <code>xentris-expediente-proyecto</code>, porque sirve en cualquier proyecto.</span>
+    </article>
+    <article class="lesson" data-v="ok">
+      <div class="top"><h3>El resultado de una herramienta viene dentro de «data»</h3><span class="pill ok">ayudó</span></div>
+      <dl class="kv">
+        <dt>Señal</dt><dd>Un script lee la respuesta de una herramienta MCP de Nexarm.</dd>
+        <dt>Lección</dt><dd>La respuesta tiene la forma <code>{outcome, data}</code>. El embudo está en <code>data.pipelines</code> y el identificador en <code>data.id</code>.</dd>
+        <dt>Evidencia</dt><dd>El script de carga falló al leer <code>pipeline.stages</code>. Con <code>data.pipelines[0]</code> cargó 4 empresas, 5 contactos y 5 tratos.</dd>
+      </dl>
+      <span class="where">Guardada en la memoria del proyecto, como dato de Nexarm.</span>
+    </article>
+    <article class="lesson" data-v="ok">
+      <div class="top"><h3>Las páginas sueltas del CRM no se abren por el servidor local</h3><span class="pill ok">ayudó</span></div>
+      <dl class="kv">
+        <dt>Señal</dt><dd>Hace falta ver o fotografiar una página de la carpeta <code>public</code> de XENCRM en local.</dd>
+        <dt>Lección</dt><dd>Abrir el archivo con <code>file:///</code>. Las rutas vivas del servidor son <code>/</code>, <code>/chat</code> y <code>/admin</code>.</dd>
+        <dt>Evidencia</dt><dd><code>localhost:3000/inicio.html</code> respondió 404. El mismo archivo abierto desde el disco se vio completo.</dd>
+      </dl>
+      <span class="where">Guardada en la memoria del proyecto, como dato de XENCRM.</span>
+    </article>
+    <article class="lesson" data-v="conf">
+      <div class="top"><h3>Cambiar el motor del clasificador no cambió nada</h3><span class="pill warn">sin efecto</span></div>
+      <dl class="kv">
+        <dt>Señal</dt><dd>El asistente del CRM contesta «fuera de alcance» a un mensaje que pide cotizar.</dd>
+        <dt>Lección</dt><dd>Mientras <code>LLM_ENGINE</code> fuerce un solo motor, <code>GATE_ENGINE</code> no se aplica. El ajuste va en <code>LLM_ENGINE</code> o en el clasificador.</dd>
+        <dt>Evidencia</dt><dd>El 22 de noviembre, el mismo mensaje con <code>GATE_ENGINE=openai</code> y con <code>GATE_ENGINE=ollama</code>: en las dos el arranque mostró el clasificador local y la intención fue «fuera de alcance».</dd>
+      </dl>
+      <span class="where">Estaba anotada como «confundido» porque habían cambiado tres variables a la vez. La prueba de una sola variable la cerró. El clasificador local sigue marcando una cotización como fuera de alcance: se trabaja en XENCRM.</span>
+    </article>
+  </div>
+</section>
+
+<section id="orquestar">
+  <div class="head"><span class="tag">// 06 · Trabajo grande</span><h2>Cómo se reparte una tarea que no cabe en un hilo</h2>
+  <p>Para auditar, migrar o revisar a fondo, la skill <code>xentris-orquestador</code> sigue cinco pasos. El orquestador despacha y verifica; el trabajo lo hace la skill o el subagente indicado.</p></div>
+  <div class="flow">
+    <div><b>Explorar</b>Listar los archivos y frentes reales antes de repartir.</div>
+    <div><b>Descomponer</b>Partir en unidades independientes.</div>
+    <div><b>Paralelizar</b>Un subagente por unidad, que devuelve solo la conclusión.</div>
+    <div><b>Verificar</b>Otro agente intenta refutar cada hallazgo.</div>
+    <div><b>Sintetizar</b>Un resultado único, con lo que quedó fuera dicho a la vista.</div>
+  </div>
+  <ul>
+    <li>Un reparto grande gasta tokens: se propone la escala y una persona lo confirma.</li>
+    <li>Publicar, pagar o enviar a terceros lo decide una persona.</li>
+  </ul>
+</section>
+
+<section id="donde">
+  <div class="head"><span class="tag">// 07 · Dónde se guarda</span><h2>Cada lección tiene un solo lugar</h2></div>
+  <div class="scroll"><table>
+    <tr><th>Si la lección…</th><th>Va en</th><th>Ejemplo</th></tr>
+    <tr><td>Es de un solo proyecto</td><td>La memoria del proyecto: un archivo y una línea en <code>MEMORY.md</code></td><td>La forma de la respuesta MCP de Nexarm</td></tr>
+    <tr><td>Se repite entre proyectos</td><td>Una skill <code>xentris-*</code>, nueva o actualizada</td><td>El ancho mínimo de la foto de celular</td></tr>
+    <tr><td>Aplica a toda sesión</td><td><code>MEMORY.md</code> o un gancho de arranque. Al agregar una línea se recorta otra</td><td>La regla de escritura clara</td></tr>
+    <tr><td>Tiene una sola prueba detrás</td><td>Se anota como «confundido» y espera otra prueba</td><td>El motor del clasificador, hasta la prueba del 22 de noviembre</td></tr>
+  </table></div>
+  <p class="muted">El mismo contenido está en el repositorio público: <a href="https://github.com/dirafweb/neona-nexarm/blob/main/PROCESOS.md" rel="noopener">PROCESOS.md</a>.</p>
+</section>
+
+<section id="preguntas">
+  <div class="head"><span class="tag">// 08 · Preguntas frecuentes</span><h2>Lo que más nos preguntan</h2></div>
+  <div class="faq">
+    <div class="card"><h3>¿Qué es Nexarm?</h3><p>Nexarm es un CRM de Neona Tech operado por agentes de IA a través de MCP. Cada acción de un agente pasa por una pasarela de gobernanza de siete pasos y queda en un libro de auditoría.</p></div>
+    <div class="card"><h3>¿Cómo se controla lo que hace un agente de IA en Nexarm?</h3><p>Con identidad propia por agente, roles y permisos por herramienta, políticas de monto, frecuencia y horario, aprobación humana exigida por el servidor y un libro de auditoría encadenado con hash.</p></div>
+    <div class="card"><h3>¿Qué es el método Proponer, Probar, Componer?</h3><p>Es la forma de mejorar el arnés de un agente: ante una tarea que salió mal se proponen dos o tres correcciones, se prueba la misma tarea con cada una y la regla final sale de comparar las ejecuciones. Viene del trabajo Harness² de Google Research.</p></div>
+    <div class="card"><h3>¿Qué formato tiene una lección?</h3><p>Cuatro campos: la señal que la dispara, la operación a hacer, la evidencia de dos ejecuciones y un veredicto: ayudó, empeoró, sin efecto o confundido.</p></div>
+  </div>
+</section>
+
+<footer class="legal">
+  <span>Fuentes: la documentación del <a href="https://github.com/dirafweb/neona-nexarm" rel="noopener">repositorio de Nexarm</a> y el trabajo <a href="https://arxiv.org/abs/2610.14224" rel="noopener">Harness²: Recursive Agent Harnessing for an Open World</a> (Google Research, 2026).</span>
+  <span>La gobernanza de Nexarm está diseñada conforme a ISO 9001, 27001 y 42001.</span>
+  <span>© 2026 NEONATECH E-BUSINESS S.A.S. · NIT 902.118.619-9 · Barranquilla, Colombia. Todos los derechos reservados. Nexarm es un producto de Neona Tech.</span>
+  <span><a href="https://neona.tech/privacidad" rel="noopener">Política de privacidad y tratamiento de datos</a> · <a href="https://neona.tech/terminos" rel="noopener">Términos y condiciones</a> · <a href="/">Guía Nexarm</a></span>
+  <span>Cookies: esta página no usa cookies ni rastreadores y no pide datos personales. Las tipografías se cargan desde Google Fonts.</span>
+  <span>Contacto: +57 605 322 5918 · gerencia@neona.tech · <a href="https://neona.tech" rel="noopener">neona.tech</a></span>
+</footer>
+
+</div>
+
+<script>
+const pasos=[
+ ["Identificar al agente","Cada agente entra con su propia credencial: un token fijo, o un inicio de sesión OAuth 2.1 con PKCE en el que una persona elige con qué agente actúa ese cliente.","Sin credencial válida la llamada termina aquí.","src/gateway.ts"],
+ ["Autorizar por rol y permiso","El rol fija el alcance: lector busca y lista, operador además escribe, admin además lee el libro y administra. Un permiso fino permite o niega una herramienta a un agente por encima de su rol.","El agente recibe «denegado».","src/tools.ts"],
+ ["Validar los datos","La pasarela revisa que los datos de la llamada cumplan lo que la herramienta espera antes de evaluar reglas de negocio.","La llamada vuelve con el error y nada cambia en el CRM.","src/gateway.ts"],
+ ["Evaluar políticas","Límites por agente: monto máximo, frecuencia, horario y campos restringidos. Un bloqueo gana a una aprobación: lo que una política prohíbe no llega a la persona.","El agente recibe «denegado» con el motivo.","src/policies.ts"],
+ ["Esperar a una persona","Si una política pide aprobación, la llamada se detiene y el agente recibe un identificador de solicitud. Solo una persona con rol supervisor decide, en la consola. Sin decisión, la solicitud vence a las 24 horas.","El agente recibe «pendiente» y el CRM queda como estaba.","src/console.ts"],
+ ["Ejecutar","La herramienta cambia el CRM en nombre del agente que la pidió. Si el proveedor de un canal falla, no queda actividad de un envío que no ocurrió.","El fallo se devuelve al agente con su causa.","src/tools.ts"],
+ ["Registrar en el libro","Cada llamada queda en un libro de solo agregar, con agente, herramienta, datos y hora. Cada entrada va encadenada a la anterior con un hash, así que una edición se nota.","La solicitud, la decisión y la ejecución quedan escritas siempre, también las denegadas.","src/audit.ts"]
+];
+const tabs=[...document.querySelectorAll('.rail button')];
+const set=(id,t)=>{document.getElementById(id).textContent=t};
+tabs.forEach(b=>b.addEventListener('click',()=>{
+  const p=pasos[+b.dataset.i];
+  tabs.forEach(x=>x.setAttribute('aria-selected',x===b));
+  set('s-t',p[0]);set('s-d',p[1]);set('s-f',p[2]);set('s-o',p[3]);
+}));
+const fs=[...document.querySelectorAll('.filter button')];
+fs.forEach(b=>b.addEventListener('click',()=>{
+  fs.forEach(x=>x.setAttribute('aria-pressed',x===b));
+  document.querySelectorAll('.lesson').forEach(l=>{l.hidden=b.dataset.f!=='all'&&l.dataset.v!==b.dataset.f});
+}));
+</script>
+
+</body>
+</html>

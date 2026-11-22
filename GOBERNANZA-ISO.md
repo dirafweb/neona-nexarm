@@ -1,6 +1,7 @@
 # Nexarm — Gobernanza de IA sobre ISO 9001, 42001 y 27001
 
-Fecha: 2026-11-10. Punto de partida: `benchmark-sendpulse/BENCHMARK.md`.
+Fecha: 2026-11-10. Punto de partida: [`benchmark-sendpulse/BENCHMARK.md`](benchmark-sendpulse/BENCHMARK.md).
+Arquitectura en [`ARQUITECTURA.md`](ARQUITECTURA.md).
 
 ## Qué aporta cada norma
 
@@ -33,6 +34,9 @@ Una pasarela de gobernanza entre el cliente de IA y el CRM. Toda llamada MCP pas
 3. **Evaluar política**: límites y clasificación del dato.
 4. **Aprobar**: si la acción es de riesgo, espera a una persona.
 5. **Registrar**: escribe la entrada de auditoría, ejecute o no.
+
+El producto los aplica en siete pasos, con validar y ejecutar por separado: ver
+[`nexarm/README.md`](nexarm/README.md#gobernanza).
 
 ## Requisitos del sistema de gestión (la empresa, no el producto)
 

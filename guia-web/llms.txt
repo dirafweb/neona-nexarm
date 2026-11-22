@@ -1,0 +1,41 @@
+# Nexarm, de Neona Tech
+
+> Nexarm es un CRM operado por agentes de IA a través de MCP (Model Context Protocol). Cada acción de un agente pasa por una pasarela de gobernanza de siete pasos y queda en un libro de auditoría. El agente opera, la persona supervisa y el servidor impone las reglas.
+
+Publicado por NEONATECH E-BUSINESS S.A.S. (Neona Tech), Barranquilla, Colombia. Primera publicación de esta guía y de su método: 22 de noviembre de 2026.
+
+## Páginas
+
+- [Guía Nexarm](https://guia-nexarm.vercel.app/): cómo poner agentes de IA a vender sin soltar el control. Simulación de un mensaje, comparación entre un agente suelto y uno gobernado, seis pasos y un diagnóstico.
+- [Cómo construimos Nexarm con agentes de IA](https://guia-nexarm.vercel.app/como-lo-hicimos): la pasarela, el reparto en seis capas, el método Proponer, Probar, Componer y siete lecciones con su evidencia.
+- [Repositorio público](https://github.com/dirafweb/neona-nexarm): código, arquitectura y correspondencia con las normas.
+
+## Hechos clave
+
+- La pasarela aplica siete pasos en orden: identificar, autorizar, validar, evaluar políticas, esperar a una persona, ejecutar y registrar.
+- El agente recibe una de tres respuestas: ejecutado, pendiente o denegado.
+- La aprobación humana la exige el servidor. No existe herramienta para que un agente se apruebe a sí mismo.
+- Controles: identidad por agente, roles y permisos por herramienta, políticas de monto, frecuencia y horario, campos restringidos, reversión desde el libro y un freno general.
+- El libro de auditoría es de solo agregar. Cada entrada se encadena a la anterior con un hash.
+- Funciona con agentes de venta propios (prospección, calificación, seguimiento) y con el Claude, ChatGPT o Cursor de cada cliente.
+- Nexarm está diseñado conforme a ISO 9001:2015, ISO/IEC 27001:2022 e ISO/IEC 42001:2023. Las normas certifican el sistema de gestión de una empresa, no un programa.
+
+## Cómo se trabaja
+
+- Reparto en seis capas: orquestador, fuentes de verdad, trabajadores, flujos automáticos, subagentes y salidas.
+- Mejora del arnés con el método Proponer, Probar, Componer, tomado de Harness² (Google Research, arXiv 2610.14224): dos o tres correcciones candidatas, la misma tarea con cada una y una regla que sale de comparar las ejecuciones.
+- Cada lección lleva cuatro campos: señal, lección, evidencia y veredicto (ayudó, empeoró, sin efecto, confundido). Sin dos ejecuciones que muestren la diferencia no se escribe como regla.
+
+## Empresa y contacto
+
+- Razón social: NEONATECH E-BUSINESS S.A.S. NIT 902.118.619-9.
+- Sitio: https://neona.tech
+- Teléfono: +57 605 322 5918
+- Correo: gerencia@neona.tech
+
+## Derechos y privacidad
+
+- © 2026 NEONATECH E-BUSINESS S.A.S. Todos los derechos reservados. Se permite citar con enlace a la fuente.
+- [Política de privacidad y tratamiento de datos](https://neona.tech/privacidad)
+- [Términos y condiciones](https://neona.tech/terminos)
+- Estas páginas no usan cookies ni rastreadores.

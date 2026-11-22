@@ -1,6 +1,7 @@
 # Nexarm — Arquitectura
 
-Fecha: 2026-11-10. Se apoya en `GOBERNANZA-ISO.md` y `benchmark-sendpulse/BENCHMARK.md`.
+Fecha: 2026-11-10. Fases al día: 2026-11-22. Se apoya en [`GOBERNANZA-ISO.md`](GOBERNANZA-ISO.md) y
+[`benchmark-sendpulse/BENCHMARK.md`](benchmark-sendpulse/BENCHMARK.md).
 
 ## Tres decisiones de Eathan
 
@@ -26,6 +27,26 @@ Fecha: 2026-11-10. Se apoya en `GOBERNANZA-ISO.md` y `benchmark-sendpulse/BENCHM
 | Motor de políticas | Límites por agente: monto, volumen, horario, tipo de dato |
 | Bandeja de aprobaciones | Acciones de riesgo detenidas hasta que una persona decide |
 | Consola de supervisión | Web para aprobar, auditar, configurar y suspender agentes |
+
+```mermaid
+flowchart TB
+    subgraph Agentes
+        P["Propios: prospección,<br/>calificación, seguimiento"]
+        K["Del cliente: Claude,<br/>ChatGPT, Cursor"]
+    end
+    subgraph Entradas
+        CW["Chatwoot"]
+        X["XENCRM"]
+    end
+    P & K -->|MCP| G
+    CW & X -->|mensaje entrante| G
+    G{"Pasarela de gobernanza"} --> MP["Motor de políticas"]
+    G --> AP["Bandeja de aprobaciones"]
+    AP --> CO["Consola de supervisión"]
+    G --> N[("Núcleo CRM")]
+    G --> LA[["Libro de auditoría"]]
+    N --> CA["Canales: correo y WhatsApp"]
+```
 
 ## Agentes
 
@@ -54,11 +75,18 @@ Fecha: 2026-11-10. Se apoya en `GOBERNANZA-ISO.md` y `benchmark-sendpulse/BENCHM
 | 1 | Núcleo CRM + servidor MCP + libro de auditoría | Hecha el 2026-11-10, en `nexarm/` |
 | 2 | Roles y permisos finos por agente, motor de políticas, ciclo de vida de credenciales | Hecha el 2026-11-10 |
 | 3 | Aprobación forzada + consola de supervisión + inicio de sesión OAuth | Hecha el 2026-11-11. Consola en el mismo proceso; Next.js llega con PostgreSQL en servidor |
-| 4 | Agentes de venta propios y empresa cero operando | Agentes hechos el 2026-11-11 y probados en vivo con OpenAI. Falta la entrada automática de prospectos |
+| 4 | Agentes de venta propios y empresa cero operando | Agentes hechos el 2026-11-11 y probados en vivo con OpenAI. La entrada automática llega en la fase 9 |
 | 5 | Reversión, suspensión y canales (correo, WhatsApp) | Hecha el 2026-11-11. Primer correo real enviado el 2026-11-14 por SMTP de Hostinger (`gerencia@neona.tech`), con aprobación en la consola. WhatsApp espera credenciales de Meta |
 | 6 | Chatwoot como bandeja de entrada y salida de mensajes | Lado de Nexarm hecho el 2026-11-12 y probado contra un Chatwoot simulado. Instalado en local (PC XENTRIS, WSL) el 2026-11-13 y probado de ida y vuelta con una bandeja de pruebas. Falta el servidor publico y el buzon real |
 | 7 | XENCRM como bandeja y tablero del equipo, y marca de Neona Tech en la consola | Hecho el 2026-11-13. Probado contra el XENCRM real de la PC XENTRIS (puerto 3000): la entrada funciona de punta a punta; la salida espera a que XENCRM conecte su WhatsApp |
 | 8 | El modo agéntico de XENCRM (asistente con clientes, copiloto del equipo, voz y teléfono) bajo la pasarela | Hecho el 2026-11-13. Cada herramienta que pide el modelo de XENCRM se consulta antes en Nexarm (`POST /gobierno/xencrm`): queda en el libro y obedece políticas, permisos y el freno general. Probado contra los dos servicios reales de la PC XENTRIS con consultas del copiloto; falta una conversación con un modelo de verdad (XENCRM no tiene configurado un motor con herramientas) |
+| 9 | Agentes automáticos: cada mensaje entrante despierta a los agentes de venta. Panel de agentes y calificación con puntaje | Hecho el 2026-11-16. Se enciende con `NEXARM_AGENTES_AUTO=1` |
+
+## Nube
+
+Desde el 2026-11-18 el mismo código corre en Vercel con PostgreSQL servidor. `pnpm nube` arma en
+`nexarm/nube/` el servidor en un solo archivo. Con `DATABASE_URL`, el equipo local usa la misma
+base que la nube; sin ella, PGlite en `nexarm/data/pg`.
 
 Los estimados suponen trabajo con agentes de código y una persona revisando a diario.
 
