@@ -128,6 +128,19 @@ nav.menu a.on{color:#fff;background:rgba(0,163,224,.18)}
 .foto b{font:600 16px var(--sora);color:#fff}
 @media(max-width:640px){ .fotos{grid-template-columns:1fr} }
 
+/* línea de tiempo y herramientas */
+.linea{list-style:none;margin:36px 0 0;padding:0;display:grid;gap:0;border-left:2px solid var(--line)}
+.linea li{display:grid;grid-template-columns:120px minmax(0,1fr);gap:16px;padding:14px 0 14px 22px;position:relative}
+.linea li::before{content:"";position:absolute;left:-7px;top:22px;width:12px;height:12px;border-radius:50%;background:var(--cian);box-shadow:0 0 0 4px var(--azul2)}
+.linea time{font:500 13px var(--mono);color:var(--cian);letter-spacing:.06em;text-transform:uppercase;padding-top:3px}
+.linea p{color:#c9d5ee;font-size:16px;margin-top:2px}
+.herr{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:18px;overflow:hidden}
+.herr div{background:var(--azul2);padding:18px 20px;display:grid;gap:3px;align-content:start}
+.herr span{font:400 12px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.herr b{font:600 17px var(--sora)}
+.herr p{font-size:15px;color:#c9d5ee}
+@media(max-width:640px){ .linea li{grid-template-columns:1fr;gap:2px} }
+
 /* marca */
 .bento{display:grid;grid-template-columns:repeat(6,1fr);gap:16px}
 .bento>*{grid-column:span 2}
@@ -180,7 +193,7 @@ dialog form button{font:600 14px var(--plex);padding:10px 14px;border-radius:99p
 <header class="top"><div class="wrap">
   <a class="logo" href="#inicio" aria-label="Nexarm, inicio"><img src="marca/isotipo-blanco.svg" alt=""><span>NEX<b>ARM</b></span></a>
   <nav class="menu" aria-label="Secciones">
-    <a href="#logrado">Logrado</a><a href="#que-es">Qué es</a><a href="#pasarela">Pasarela</a><a href="#consola">Consola</a><a href="#crm">CRM</a><a href="#marca">Marca</a><a href="#barranquilla">Barranquilla</a><a href="#evento">Evento</a><a href="#cierre">Contacto</a>
+    <a href="#logrado">Logrado</a><a href="#que-es">Qué es</a><a href="#pasarela">Pasarela</a><a href="#consola">Consola</a><a href="#crm">CRM</a><a href="#como">Cómo</a><a href="#marca">Marca</a><a href="#barranquilla">Barranquilla</a><a href="#evento">Evento</a><a href="#cierre">Contacto</a>
   </nav>
 </div></header>
 
@@ -256,6 +269,8 @@ dialog form button{font:600 14px var(--plex);padding:10px 14px;border-radius:99p
         <button role="tab" aria-selected="true" data-img="inicio" data-alt="Panel de inicio de la consola de Nexarm">Panel</button>
         <button role="tab" aria-selected="false" data-img="aprobaciones" data-alt="Bandeja de aprobaciones de la consola de Nexarm">Aprobaciones</button>
         <button role="tab" aria-selected="false" data-img="libro" data-alt="Libro de auditoría de la consola de Nexarm">Libro de auditoría</button>
+        <button role="tab" aria-selected="false" data-img="agentes" data-alt="Lista de agentes con su rol, estado y botón de suspender">Agentes</button>
+        <button role="tab" aria-selected="false" data-img="politicas" data-alt="Políticas activas de la consola de Nexarm">Políticas</button>
         <button role="tab" aria-selected="false" data-img="crm-hoy" data-alt="Pantalla de inicio del CRM con las tareas que esperan a una persona">CRM · Hoy</button>
         <button role="tab" aria-selected="false" data-img="crm-bandeja" data-alt="Bandeja omnicanal del CRM">CRM · Bandeja</button>
         <button role="tab" aria-selected="false" data-img="crm-embudo" data-alt="Embudo de ventas del CRM">CRM · Embudo</button>
@@ -286,9 +301,30 @@ dialog form button{font:600 14px var(--plex);padding:10px 14px;border-radius:99p
   </div>
 </section>
 
-<section class="block alt" id="marca">
+<section class="block alt" id="como">
   <div class="wrap">
-    <div class="head rv"><p class="tag">// 08 · La marca</p><h2>Una sola cara para el producto.</h2><p class="lead">Nexarm hereda el azul, el cian y las tres tipografías de Neona Tech.</p></div>
+    <div class="head rv"><p class="tag">// 08 · Cómo lo hicimos</p><h2>Del primer archivo a la nube, día por día.</h2><p class="lead">Agentes de código construyen; una persona dirige y revisa a diario. Todo quedó en el repositorio público.</p></div>
+    <div class="grid g3">
+      <div class="card rv"><p class="tag">Decisión 1</p><h3>Desde cero</h3><p>La gobernanza va en el centro del sistema, no pegada encima de un CRM existente.</p></div>
+      <div class="card rv"><p class="tag">Decisión 2</p><h3>El agente es el usuario principal</h3><p>Toda capacidad nace como herramienta MCP. La pantalla llama a esas mismas herramientas.</p></div>
+      <div class="card rv"><p class="tag">Decisión 3</p><h3>Nexarm se vende con Nexarm</h3><p>Sus agentes de venta trabajan bajo las mismas políticas que se ofrecen al cliente.</p></div>
+    </div>
+    <ol class="linea rv"><li><time>10 nov</time><div><h3>Benchmark, marco ISO y arquitectura</h3><p>Fases 1 y 2: núcleo del CRM, servidor MCP, libro, roles, permisos finos y políticas.</p></div></li><li><time>11 nov</time><div><h3>Fases 3, 4 y 5</h3><p>Aprobación humana, consola y OAuth. Agentes de venta. Reversión, freno general y canales.</p></div></li><li><time>12 nov</time><div><h3>Fase 6</h3><p>Chatwoot como bandeja de entrada y salida.</p></div></li><li><time>13 nov</time><div><h3>Fases 7 y 8</h3><p>XENCRM conectado como bandeja y tablero, con su asistente bajo la pasarela.</p></div></li><li><time>14 nov</time><div><h3>Revisión y respaldo</h3><p>Repositorios en GitHub. Primer correo real enviado con aprobación en la consola.</p></div></li><li><time>15 y 16 nov</time><div><h3>Fase 9 y videos</h3><p>Panel de agentes, calificación con puntaje y agentes automáticos. Video explicativo y de demostración.</p></div></li><li><time>17 y 18 nov</time><div><h3>Nube y bootcamp</h3><p>Nexarm en Vercel con PostgreSQL. Guía web. Presentación del prototipo en StartIA, Semana T.</p></div></li><li><time>22 nov</time><div><h3>Documentación y método</h3><p>README, procesos con lecciones verificadas, guía indexable por IA, marca y esta presentación.</p></div></li></ol>
+    <div class="grid g4" style="margin-top:28px">
+      <div class="card rv"><div class="num" data-n="24">24</div><h3>Herramientas MCP</h3><p>Contactos, tratos, mensajes, agentes, políticas y auditoría.</p></div>
+      <div class="card rv"><div class="num" data-n="31">31</div><h3>Archivos TypeScript</h3><p>Pasarela, herramientas, libro, consola, canales y agentes.</p></div>
+      <div class="card rv"><div class="num" data-n="9">9</div><h3>Archivos de prueba</h3><p>Uno por fase, con servicios simulados por HTTP.</p></div>
+      <div class="card rv"><div class="num" data-n="3">3</div><h3>Pasos de mejora</h3><p>Proponer, probar y componer: así un tropiezo se vuelve regla.</p></div>
+    </div>
+    <div class="head rv" style="margin-top:clamp(48px,7vw,84px)"><p class="tag">// 09 · Herramientas</p><h2>Con qué se construyó.</h2></div>
+    <div class="herr rv"><div><span>Lenguaje</span><b>TypeScript sobre Node.js</b><p>Un solo lenguaje, del servidor a las pruebas</p></div><div><span>Base de datos</span><b>PostgreSQL en la nube y PGlite sin red</b><p>El mismo esquema en la nube, en la PC y en las pruebas</p></div><div><span>Protocolo de agentes</span><b>SDK de MCP</b><p>Que Claude, ChatGPT o Cursor operen el CRM bajo las mismas reglas</p></div><div><span>Servidor</span><b>Express</b><p>Consola, servidor MCP y OAuth en un solo proceso</p></div><div><span>Validación</span><b>Zod</b><p>Cada herramienta declara y valida sus datos</p></div><div><span>Modelos de IA</span><b>SDK de Anthropic y SDK de OpenAI</b><p>Proveedor intercambiable: la gobernanza vive en la pasarela</p></div><div><span>Correo y mensajería</span><b>Nodemailer, XENCRM y Chatwoot</b><p>Envío desde el buzón de la empresa y bandejas del equipo</p></div><div><span>Nube</span><b>Vercel, empaquetado con esbuild</b><p>El servidor sube como un solo archivo</p></div><div><span>Construcción</span><b>Claude Code con skills propias</b><p>Agentes de código, con una persona que dirige y revisa a diario</p></div><div><span>Videos y guía</span><b>HTML grabado con Chrome y montaje con ffmpeg</b><p>Videos, capturas y esta página</p></div></div>
+    <div class="btns rv" style="margin-top:24px"><a class="btn p" href="como-lo-hicimos">Leer el método completo</a><a class="btn" href="https://github.com/dirafweb/neona-nexarm" rel="noopener">Ver el repositorio en GitHub</a></div>
+  </div>
+</section>
+
+<section class="block" id="marca">
+  <div class="wrap">
+    <div class="head rv"><p class="tag">// 10 · La marca</p><h2>Una sola cara para el producto.</h2><p class="lead">Nexarm hereda el azul, el cian y las tres tipografías de Neona Tech.</p></div>
     <div class="bento">
       <div class="card ancho logoG rv"><img src="marca/isotipo-blanco.svg" alt=""><span>NEX<b>ARM</b></span></div>
       <div class="card rv"><p class="tag">Paleta</p><div class="pal"><span style="background:#0A2A5E">#0A2A5E</span><span style="background:#00A3E0;color:#04122b">#00A3E0</span><span style="background:#00B386;color:#04122b">#00B386</span><span style="background:#2E3440">#2E3440</span></div><p>Azul profundo, cian de acción, verde de «ejecutado» y antracita.</p></div>
@@ -300,19 +336,19 @@ dialog form button{font:600 14px var(--plex);padding:10px 14px;border-radius:99p
   </div>
 </section>
 
-<section class="block" id="barranquilla">
+<section class="block alt" id="barranquilla">
   <div class="wrap">
     <div class="ciudad rv">
       <video data-auto muted loop playsinline preload="metadata" poster="media/barranquilla.jpg" src="media/barranquilla.mp4" aria-hidden="true"></video>
       <div class="velo"></div>
-      <div class="txt"><p class="tag">// 09 · De dónde viene</p><h2>Hecho en Barranquilla.</h2><p class="lead">Neona Tech trabaja desde la Cra. 52 No. 79-19, en Barranquilla, Atlántico.</p><small>Video ilustrativo generado con IA.</small></div>
+      <div class="txt"><p class="tag">// 11 · De dónde viene</p><h2>Hecho en Barranquilla.</h2><p class="lead">Neona Tech trabaja desde la Cra. 52 No. 79-19, en Barranquilla, Atlántico.</p><small>Video ilustrativo generado con IA.</small></div>
     </div>
   </div>
 </section>
 
-<section class="block alt" id="evento">
+<section class="block" id="evento">
   <div class="wrap">
-    <div class="head rv"><p class="tag">// 10 · El evento</p><h2>Semana T, en Barranquilla.</h2><p class="lead">Del 16 al 21 de noviembre de 2026. Fotos tomadas por el equipo de Neona Tech en el salón principal.</p></div>
+    <div class="head rv"><p class="tag">// 12 · El evento</p><h2>Nexarm en Semana T.</h2><p class="lead">El prototipo se presentó en el bootcamp StartIA de Semana T, en Barranquilla, del 16 al 21 de noviembre de 2026. Fotos tomadas por el equipo de Neona Tech.</p></div>
     <video data-auto controls muted loop playsinline preload="metadata" poster="media/evento.jpg" src="media/evento.mp4" aria-label="Fotos del escenario de Semana T en Barranquilla"></video>
     <p class="fuente rv" style="margin-top:12px">Semana T es un evento de sus organizadores. Las marcas que aparecen en pantalla pertenecen a sus dueños.</p>
   </div>
@@ -320,7 +356,7 @@ dialog form button{font:600 14px var(--plex);padding:10px 14px;border-radius:99p
 
 <section class="block" id="metodo">
   <div class="wrap">
-    <div class="head rv"><p class="tag">// 11 · Preguntas</p><h2>Lo que más nos preguntan.</h2></div>
+    <div class="head rv"><p class="tag">// 13 · Preguntas</p><h2>Lo que más nos preguntan.</h2></div>
     <div class="rv">
       <details><summary>¿Qué es MCP?</summary><p>Es un protocolo abierto que permite a un agente de IA usar herramientas de forma controlada. En Nexarm, cada herramienta del CRM se ofrece por MCP y pasa por la pasarela.</p></details>
       <details><summary>¿Puedo usar mi propio asistente?</summary><p>Sí. El Claude, ChatGPT o Cursor de cada cliente se conecta con OAuth 2.1 y PKCE, y queda bajo las mismas reglas que los agentes propios.</p></details>
