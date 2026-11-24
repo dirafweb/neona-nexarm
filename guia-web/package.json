@@ -1,0 +1,6 @@
+{
+  "name": "guia-nexarm",
+  "private": true,
+  "type": "module",
+  "dependencies": { "@anthropic-ai/sdk": "^1.7.0" }
+}

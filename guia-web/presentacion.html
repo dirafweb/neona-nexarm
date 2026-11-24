@@ -175,6 +175,32 @@ footer{border-top:1px solid var(--line);padding:32px 0 48px;font-size:13.5px;col
 footer .wrap{display:grid;gap:8px}
 footer a{color:#c9d5ee}
 
+.fin{display:grid;grid-template-columns:1fr 1.25fr 1fr;gap:16px;width:100%;text-align:left;margin-top:14px}
+.fin .qr{justify-items:center;text-align:center}
+.fin .qr img{width:min(220px,60vw);height:auto;border-radius:14px;background:#fff;padding:8px}
+.contacto ul{list-style:none;margin:6px 0 10px;padding:0;display:grid;gap:8px}
+.contacto li{display:grid;grid-template-columns:92px minmax(0,1fr);gap:10px;font-size:16px;color:#e8eefb}
+.contacto li span{font:400 12px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);padding-top:4px}
+.contacto .btn{width:max-content}
+@media(max-width:900px){ .fin{grid-template-columns:1fr} }
+
+/* asistente */
+#asis-btn{position:fixed;right:16px;bottom:16px;z-index:70;font:600 15px var(--plex);padding:13px 18px;border-radius:99px;border:0;background:var(--cian);color:#04122b;cursor:pointer;box-shadow:0 12px 40px -8px rgba(0,163,224,.7);min-height:48px}
+#asis{position:fixed;right:16px;bottom:16px;z-index:80;width:min(400px,calc(100vw - 32px));height:min(600px,calc(100svh - 32px));display:none;flex-direction:column;background:#071b3f;border:1px solid var(--line);border-radius:18px;overflow:hidden;box-shadow:0 30px 90px -20px #000}
+#asis.abierto{display:flex}
+#asis header{display:flex;align-items:center;gap:10px;padding:12px 14px;border-bottom:1px solid var(--line)}
+#asis header img{width:22px;height:22px} #asis header b{font:600 15px var(--sora)} #asis header small{display:block;font:400 11.5px var(--mono);color:var(--muted)}
+#asis header button{margin-left:auto;all:unset;cursor:pointer;padding:8px 10px;border-radius:8px;color:var(--muted);font-size:14px}
+#asis-log{flex:1;overflow:auto;padding:14px;display:grid;gap:10px;align-content:start}
+#asis-log p{margin:0;padding:10px 13px;border-radius:14px;font-size:15px;line-height:1.5;max-width:88%;white-space:pre-wrap;overflow-wrap:anywhere}
+#asis-log .a{background:rgba(159,177,214,.12);justify-self:start} #asis-log .p{background:var(--cian);color:#04122b;justify-self:end}
+#asis-sug{display:flex;flex-wrap:wrap;gap:6px;padding:0 14px 10px}
+#asis-sug button{all:unset;cursor:pointer;font-size:13px;padding:7px 11px;border:1px solid var(--line);border-radius:99px;color:#c9d5ee}
+#asis form{display:flex;gap:8px;padding:10px 12px;border-top:1px solid var(--line)}
+#asis input{flex:1;min-width:0;font:16px var(--plex);padding:11px 13px;border-radius:12px;border:1px solid var(--line);background:#04122b;color:#fff}
+#asis form button{font:600 15px var(--plex);padding:0 16px;border-radius:12px;border:0;background:var(--cian);color:#04122b;cursor:pointer;min-height:44px}
+#asis .nota{font-size:11.5px;color:var(--muted);padding:0 14px 10px;margin:0}
+
 /* modal */
 dialog{border:0;padding:0;background:#000;border-radius:16px;width:min(1100px,94vw);overflow:hidden}
 dialog::backdrop{background:rgba(2,8,20,.86)}
@@ -372,10 +398,12 @@ dialog form button{font:600 14px var(--plex);padding:10px 14px;border-radius:99p
     <p class="tag">// Siguiente paso</p>
     <h2 class="rv">Míralo trabajar con un caso tuyo.</h2>
     <p class="lead rv">Trae una conversación real de tu negocio y la recorremos por los siete pasos.</p>
-    <div class="btns rv" style="justify-content:center">
-      <a class="btn p" href="tel:+576053225918">Llamar · +57 605 322 5918</a>
-      <a class="btn" href="mailto:gerencia@neona.tech?subject=Quiero%20ver%20Nexarm%20con%20un%20caso%20m%C3%ADo">gerencia@neona.tech</a>
-      <a class="btn" href="./">Leer la guía</a>
+    <div class="fin rv">
+      <div class="card qr"><img src="media/qr-whatsapp.png" alt="Código QR para escribir por WhatsApp a Neona Tech" width="220" height="220" loading="lazy"><h3>Escríbenos por WhatsApp</h3><p>Apunta la cámara del celular.</p><a class="btn p" href="https://wa.me/573106771455?text=Hola%2C%20vi%20la%20presentaci%C3%B3n%20de%20Nexarm%20y%20quiero%20saber%20m%C3%A1s." rel="noopener">+57 310 677 1455</a></div>
+      <div class="card contacto"><p class="tag">Contacto</p><h3>Marco Antonio Vitola Polo</h3><p>CEO, gerente y representante legal de Neona Tech</p>
+        <ul><li><span>WhatsApp</span><a href="https://wa.me/573106771455" rel="noopener">+57 310 677 1455</a></li><li><span>Teléfono</span><a href="tel:+576053225918">+57 605 322 5918</a></li><li><span>Correo</span><a href="mailto:gerencia@neona.tech?subject=Quiero%20ver%20Nexarm%20con%20un%20caso%20m%C3%ADo">gerencia@neona.tech</a></li><li><span>Sitio</span><a href="https://neona.tech" rel="noopener">neona.tech</a></li><li><span>Oficina</span>Cra. 52 No. 79-19, Piso 3, Oficina 19, Barranquilla</li></ul>
+        <a class="btn" href="contacto/neona-tech.vcf" download>Guardar el contacto</a></div>
+      <div class="card qr"><img src="media/qr-presentacion.png" alt="Código QR de esta presentación" width="220" height="220" loading="lazy"><h3>Lleva esta presentación</h3><p>Ábrela en el celular o compártela.</p><a class="btn" href="./">Leer la guía</a></div>
     </div>
   </div>
 </section>
@@ -386,6 +414,15 @@ dialog form button{font:600 14px var(--plex);padding:10px 14px;border-radius:99p
   <p><a href="https://neona.tech/privacidad">Política de privacidad y tratamiento de datos</a> · <a href="https://neona.tech/terminos">Términos y condiciones</a> · <a href="marca">Manual de marca</a> · <a href="como-lo-hicimos">Cómo lo hicimos</a></p>
   <p>Cookies: esta página no usa cookies de seguimiento ni de publicidad.</p>
 </div></footer>
+
+<button id="asis-btn" type="button" aria-controls="asis" aria-expanded="false" hidden>Pregúntale a Nexarm</button>
+<section id="asis" aria-label="Asistente de Nexarm" role="dialog">
+  <header><img src="marca/isotipo-blanco.svg" alt=""><div><b>Asistente de Nexarm</b><small>Inteligencia artificial · solo informa del proyecto</small></div><button type="button" id="asis-cerrar" aria-label="Cerrar el asistente">Cerrar</button></header>
+  <div id="asis-log" aria-live="polite"></div>
+  <div id="asis-sug"></div>
+  <form id="asis-form"><input id="asis-in" maxlength="600" autocomplete="off" placeholder="Escribe tu pregunta sobre Nexarm" aria-label="Tu pregunta"><button>Enviar</button></form>
+  <p class="nota">Tu pregunta se envía a un modelo de IA para responderte. No escribas datos personales. <a href="https://neona.tech/privacidad">Privacidad</a></p>
+</section>
 
 <dialog id="modal" aria-label="Video de la consola de Nexarm">
   <form method="dialog"><button>Cerrar</button></form>
@@ -467,6 +504,31 @@ dialog form button{font:600 14px var(--plex);padding:10px 14px;border-radius:99p
     })},{threshold:.35});
     vids.forEach(function(v){ iv.observe(v); });
   }
+
+  // asistente de IA: solo informa del proyecto
+  (function(){
+    var caja=document.getElementById('asis'), boton=document.getElementById('asis-btn'), log=document.getElementById('asis-log'),
+        sug=document.getElementById('asis-sug'), form=document.getElementById('asis-form'), entrada=document.getElementById('asis-in'), hist=[], ocupado=false;
+    var CONTACTO='Escríbenos por WhatsApp al +57 310 677 1455 o a gerencia@neona.tech.';
+    function burbuja(t,c){var p=document.createElement('p'); p.className=c; p.textContent=t; log.appendChild(p); log.scrollTop=log.scrollHeight; return p;}
+    function abrir(v){caja.classList.toggle('abierto',v); boton.style.display=v?'none':''; boton.setAttribute('aria-expanded',v); if(v){ if(!log.children.length) burbuja('Hola. Soy el asistente de IA de Nexarm. Pregúntame qué es, cómo funciona la pasarela, en qué estado está o cómo contactar al equipo.','a'); entrada.focus(); }}
+    ['¿Qué es Nexarm?','¿Cuáles son los siete pasos?','¿Está certificado en ISO?','¿Cómo los contacto?'].forEach(function(q){var b=document.createElement('button'); b.type='button'; b.textContent=q; b.addEventListener('click',function(){enviar(q)}); sug.appendChild(b);});
+    function enviar(t){
+      t=(t||'').trim(); if(!t||ocupado) return; ocupado=true; entrada.value=''; burbuja(t,'p'); hist.push({rol:'persona',texto:t});
+      var espera=burbuja('Escribiendo…','a');
+      fetch('/api/asistente',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({mensajes:hist.slice(-8)})})
+        .then(function(r){return r.json().then(function(d){return {ok:r.ok,estado:r.status,d:d}})})
+        .then(function(x){
+          if(x.ok&&x.d.texto){ espera.textContent=x.d.texto; hist.push({rol:'asistente',texto:x.d.texto}); }
+          else { hist.pop(); espera.textContent = x.estado===429 ? 'Recibí muchas preguntas seguidas. Espera unos minutos. '+CONTACTO : 'El asistente no está disponible en este momento. '+CONTACTO; }
+        })
+        .catch(function(){ hist.pop(); espera.textContent='No pude conectar con el asistente. '+CONTACTO; })
+        .then(function(){ ocupado=false; log.scrollTop=log.scrollHeight; });
+    }
+    fetch('/api/asistente').then(function(r){return r.json()}).then(function(d){ if(d&&d.activo) boton.hidden=false; }).catch(function(){});
+    boton.addEventListener('click',function(){abrir(true)}); document.getElementById('asis-cerrar').addEventListener('click',function(){abrir(false)});
+    form.addEventListener('submit',function(e){e.preventDefault(); enviar(entrada.value)});
+  })();
 })();
 </script>
 </body>

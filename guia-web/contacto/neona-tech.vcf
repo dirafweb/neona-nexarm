@@ -1,0 +1,13 @@
+BEGIN:VCARD
+VERSION:3.0
+N:Vitola Polo;Marco Antonio;;;
+FN:Marco Antonio Vitola Polo
+ORG:Neona Tech (NEONATECH E-BUSINESS S.A.S.)
+TITLE:CEO, gerente y representante legal
+TEL;TYPE=WORK,VOICE:+576053225918
+TEL;TYPE=CELL:+573106771455
+EMAIL;TYPE=WORK:gerencia@neona.tech
+URL:https://neona.tech
+ADR;TYPE=WORK:;;Cra. 52 No. 79-19\, Piso 3\, Oficina 19;Barranquilla;Atlantico;;Colombia
+NOTE:Nexarm: https://guia-nexarm.vercel.app/presentacion
+END:VCARD
